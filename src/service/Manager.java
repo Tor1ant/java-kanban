@@ -1,22 +1,16 @@
 package service;
+
 import model.Epic;
 import model.SubTask;
 import model.Task;
+
 import java.util.*;
 
 public class Manager {
-    private final HashMap<Integer, Task> tasks;
-    private final HashMap<Integer, Epic> epics;
-    private final HashMap<Integer, SubTask> subTasks;
-    private int id;
-
-    public Manager() {
-        id = 0;
-        tasks = new HashMap<>();
-        epics = new HashMap<>();
-        subTasks = new HashMap<>();
-    }
-
+    private final HashMap<Integer, Task> tasks = new HashMap<>();
+    private final HashMap<Integer, Epic> epics = new HashMap<>();
+    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private int id = 0;
 
     public int createTask(Task task) {
         id++;
@@ -34,11 +28,10 @@ public class Manager {
         return epic.getId();
     }
 
-    public int createSubTask(SubTask subTask, int epicId) {
+    public int createSubTask(SubTask subTask) {
         id++;
         subTask.setId(id);
-        subTask.setEpicId(epicId);
-        epics.get(epicId).addSubTasksId(epicId);
+        epics.get(subTask.getEpicId()).addSubTasksId(subTask.getId());
         updateSubTask(subTask);
         return subTask.getId();
     }
@@ -56,10 +49,11 @@ public class Manager {
     }
 
     public int updateSubTask(SubTask subTask) {
+        subTasks.remove(subTask.getId());
         subTasks.put(subTask.getId(), subTask);
         changeEpicProgress(subTask.getEpicId());
-
         return subTask.getId();
+
     }
 
     public ArrayList<Task> getAllTasks() {
@@ -111,6 +105,7 @@ public class Manager {
 
     public void removeSubTaskById(int id) {
         int epicId = subTasks.get(id).getEpicId();
+        epics.get(epicId).removeSubTask(id);
         subTasks.remove(id);
         changeEpicProgress(epicId);
     }
@@ -127,33 +122,33 @@ public class Manager {
 
     private void changeEpicProgress(int epicID) {
         ArrayList<SubTask> subTaskArrayList = getListOfEpicsSubTasks(epicID);
-        String progress1 = "NEW";
-        String progress2 = "IN_PROGRESS";
-        String progress3 = "DONE";
+        String progressNew = "NEW";
+        String progressInProgress = "IN_PROGRESS";
+        String progressDone = "DONE";
         int countOfProgressNew = 0;
         int countOfProgressDone = 0;
         if (epics.get(epicID).getSubTasksId().isEmpty()) {
-            epics.get(epicID).setProgress(progress1);
+            epics.get(epicID).setProgress(progressNew);
+            return;
         }
 
-        for (SubTask subTask :
-                subTaskArrayList) {
-            if (subTask.getProgress().equals("NEW")) {
+        for (SubTask subTask : subTaskArrayList) {
+            if (subTask.getProgress().equals(progressNew)) {
                 countOfProgressNew++;
-            } else if (subTask.getProgress().equals("DONE")) {
+            } else if (subTask.getProgress().equals(progressDone)) {
                 countOfProgressDone++;
             }
         }
 
         if (countOfProgressNew == subTaskArrayList.size()) {
-            epics.get(epicID).setProgress(progress1);
+            epics.get(epicID).setProgress(progressNew);
             return;
         }
 
         if (countOfProgressDone == subTaskArrayList.size()) {
-            epics.get(epicID).setProgress(progress3);
+            epics.get(epicID).setProgress(progressDone);
         } else {
-            epics.get(epicID).setProgress(progress2);
+            epics.get(epicID).setProgress(progressInProgress);
         }
     }
 }
