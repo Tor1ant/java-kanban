@@ -1,9 +1,9 @@
 package model;
 
 public class Task {
-    private String title;
-    private String description;
-    private int id;
+    protected String title;
+    protected String description;
+    protected int id;
 
     String progress; // -> ƒанна€ переменна€ имеет только 3 состо€ни€: NEW, IN_PROGRESS, DONE
 
@@ -76,6 +76,6 @@ public class Task {
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", progress='" + progress + '\'' +
-                '}'+"\n";
+                '}' + "\n";
     }
 }
