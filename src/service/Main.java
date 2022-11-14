@@ -8,29 +8,57 @@ public class Main {
 
     public static void main(String[] args) {
         Manager manager = new Manager();
+        Task task1 = new Task("Погулять с собакой", "в 5 утра", "NEW");
+        Task task2 = new Task("изучить ФЗ #115 о Банкротстве физических лиц", "К понедельнику", "NEW");
+        Epic epic = new Epic("Сделать ремонт в квартире", "Давно пора");
+        Epic epic2 = new Epic("Сходить в магазин", "Купить продукты");
+        SubTask subtask1 = new SubTask("Начать ремонт с кухни", "Сначала выровнять стены", "NEW", 3);
+        SubTask subtask2 = new SubTask("Купить молоко", "Зайти за молоком в пятерочку", "NEW", 4);
+        SubTask subtask3 = new SubTask("Купить сахар", "это не обязательно", "NEW", 4);
+        manager.createTask(task1);
+        manager.createTask(task2);
+        manager.createEpic(epic);
+        manager.createEpic(epic2);
+        int subTaskId1 = manager.addSubTask(subtask1);
+        int subTaskId2 = manager.addSubTask(subtask2);
+        int subTaskId3 = manager.addSubTask(subtask3);
 
-        int task = manager.createTask(new Task("Погулять с собакой", "в 5 утра", "NEW"));
-        int task2 = manager.createTask(new Task("изучить ФЗ #115 о Банкротстве физических лиц", "К понедельнику", "NEW"));
-        int epic = manager.createEpic(new Epic("Сделать ремонт в квартире", "Давно пора"));
-        int epic2 = manager.createEpic(new Epic("Сходить в магазин", "Купить продукты"));
-        int subtask1 = manager.createSubTask(new SubTask("Начать ремонт с кухни", "Сначала выровнять стены", "NEW", 3));
-        int subtask2 = manager.createSubTask(new SubTask("Купить молоко", "Зайти за молоком в пятерочку", "NEW", 4));
-        int subtask3 = manager.createSubTask(new SubTask("Купить сахар", "это не обязательно", "NEW", 4));
+        // Печатаем все таски после создания
 
         System.out.println(manager.getAllTasks());
+        System.out.println(manager.getAllEpics());
+        System.out.println(manager.getAllSubTasks());
 
-        int updatedSubTask1 = manager.updateSubTask(new SubTask("Купить тростниковый сахар", "Вместо обычного", "NEW", 4));
-        int updatedSubTask2 = manager.updateSubTask(new SubTask("Начать ремонт с кухни", "Сначала выровнять стены", "IN_PROGRESS", 3));
+        // обновляем таски, эпики и сабтаски
+
+        subtask3.setTitle("Купить тростниковый сахар");
+        subtask3.setDescription("Вместо обычного");
+        subtask3.setProgress("NEW");
+        subtask3.setEpicId(4);
+        manager.updateSubTask(subtask3);
+        subtask1.setProgress("IN_PROGRESS");
+        manager.updateSubTask(subtask1);
+        task1.setProgress("DONE");
+        task2.setProgress("IN_PROGRESS");
+        manager.updateTask(task1);
+        manager.updateTask(task2);
 
         System.out.println("Распечатываем все таски после обновления" + "\n");
         System.out.println(manager.getAllTasks());
-        manager.removeSubTaskById(updatedSubTask2);
+        System.out.println(manager.getAllEpics());
+        System.out.println(manager.getAllSubTasks());
+
+        manager.removeSubTaskById(subTaskId1);
 
         System.out.println("распечатываем все таски после удаления одной сабтаски" + "\n");
         System.out.println(manager.getAllTasks());
+        System.out.println(manager.getAllEpics());
+        System.out.println(manager.getAllSubTasks());
 
-        int subtask4 = manager.createSubTask(new SubTask("Ремонт завершен", "Ура", "DONE", 3));
+        manager.addSubTask(new SubTask("Ремонт завершен", "Ура", "DONE", 3));
         System.out.println("Печатаем результаты после добавления новой сабтаски" + "\n");
         System.out.println(manager.getAllTasks());
+        System.out.println(manager.getAllEpics());
+        System.out.println(manager.getAllSubTasks());
     }
 }

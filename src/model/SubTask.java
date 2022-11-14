@@ -1,8 +1,8 @@
 package model;
-
 import java.util.Objects;
 
 public class SubTask extends Task {
+
     int epicId;
 
     public SubTask(String title, String description, String progress, int epicId) {
@@ -39,6 +39,4 @@ public class SubTask extends Task {
                 ", progress='" + progress + '\'' +
                 "} " + "\n";
     }
-
-
 }

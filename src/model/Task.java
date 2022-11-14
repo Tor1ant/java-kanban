@@ -4,8 +4,7 @@ public class Task {
     protected String title;
     protected String description;
     protected int id;
-
-    String progress; // -> ƒанна€ переменна€ имеет только 3 состо€ни€: NEW, IN_PROGRESS, DONE
+    protected String progress; // -> ƒанна€ переменна€ имеет только 3 состо€ни€: NEW, IN_PROGRESS, DONE
 
     public Task(String title, String description, String progress) {
         this.title = title;
