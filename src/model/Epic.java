@@ -6,22 +6,11 @@ import java.util.Objects;
 public class Epic extends Task {
 
     private final ArrayList<Integer> subTasksId = new ArrayList<>();
-    private String oldTitle;
+
 
     public Epic(String title, String description) {
         super(title, description);
 
-    }
-
-    @Override
-    public void setTitle(String title) {
-        oldTitle = super.getTitle();
-        this.title = title;
-
-    }
-
-    public String getOldTitle() {
-        return oldTitle;
     }
 
     public ArrayList<Integer> getSubTasksId() {

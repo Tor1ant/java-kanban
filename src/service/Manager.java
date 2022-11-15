@@ -46,18 +46,8 @@ public class Manager {
     }
 
     public int updateEpic(Epic epic) {
-        if (!(epic.getOldTitle().equals(epics.get(epic.getId()).getTitle()))) {
-            for (Integer subTaskId : epic.getSubTasksId()) {
-                subTasks.remove(subTaskId);
-            }
-            epics.get(epic.getId()).clearSubTasksId();
-            epics.put(epic.getId(), epic);
-            changeEpicProgress(epic.getId());
-            return epic.getId();
-        }
         if (epics.containsValue(epic)) {
             epics.put(epic.getId(), epic);
-            changeEpicProgress(epic.getId());
         }
         return epic.getId();
     }

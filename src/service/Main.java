@@ -56,15 +56,17 @@ public class Main {
         System.out.println(manager.getAllEpics());
         System.out.println(manager.getAllSubTasks());
 
-        manager.addSubTask(new SubTask("Ремонт завершен", "Ура", "DONE", 3));
+        SubTask subTask5 = (new SubTask("Ремонт завершен", "Ура", "DONE", 3));
+        manager.addSubTask(subTask5);
         System.out.println("Печатаем результаты после добавления новой сабтаски" + "\n");
         System.out.println(manager.getAllTasks());
         System.out.println(manager.getAllEpics());
         System.out.println(manager.getAllSubTasks());
 
-        System.out.println("меняем эпик и выводим результат на экран"+"\n");
+        System.out.println("меняем эпик и выводим результат на экран" + "\n");
         epic.setTitle("Ремонт нужно сделать повторно");
         manager.updateEpic(epic);
+        manager.removeSubTaskById(subTask5.getId());
         System.out.println(manager.getAllTasks());
         System.out.println(manager.getAllEpics());
         System.out.println(manager.getAllSubTasks());
