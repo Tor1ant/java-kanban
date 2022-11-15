@@ -32,29 +32,41 @@ public class Manager {
         id++;
         subTask.setId(id);
         epics.get(subTask.getEpicId()).addSubTasksId(subTask.getId());
-        updateSubTask(subTask);
+        subTasks.put(subTask.getId(), subTask);
+        changeEpicProgress(subTask.getEpicId());
 
         return subTask.getId();
     }
 
     public int updateTask(Task task) {
-        tasks.put(task.getId(), task);
-
+        if (tasks.containsValue(task)) {
+            tasks.put(task.getId(), task);
+        }
         return task.getId();
     }
 
     public int updateEpic(Epic epic) {
-        epics.put(epic.getId(), epic);
-        changeEpicProgress(epic.getId());
-
+        if (!(epic.getOldTitle().equals(epics.get(epic.getId()).getTitle()))) {
+            for (Integer subTaskId : epic.getSubTasksId()) {
+                subTasks.remove(subTaskId);
+            }
+            epics.get(epic.getId()).clearSubTasksId();
+            epics.put(epic.getId(), epic);
+            changeEpicProgress(epic.getId());
+            return epic.getId();
+        }
+        if (epics.containsValue(epic)) {
+            epics.put(epic.getId(), epic);
+            changeEpicProgress(epic.getId());
+        }
         return epic.getId();
     }
 
     public SubTask updateSubTask(SubTask subTask) {
-        subTasks.remove(subTask.getId());
-        subTasks.put(subTask.getId(), subTask);
-        changeEpicProgress(subTask.getEpicId());
-
+        if (subTasks.containsValue(subTask)) {
+            subTasks.put(subTask.getId(), subTask);
+            changeEpicProgress(subTask.getEpicId());
+        }
         return subTask;
 
     }
@@ -80,10 +92,15 @@ public class Manager {
 
     public void removeAllEpics() {
         epics.clear();
+        subTasks.clear();
     }
 
     public void removeAllSubTasks() {
         subTasks.clear();
+        for (Epic epic : epics.values()) {
+            epic.clearSubTasksId();
+            changeEpicProgress(epic.getId());
+        }
     }
 
     public Task getTaskByID(int id) {
@@ -137,6 +154,7 @@ public class Manager {
         String progressDone = "DONE";
         int countOfProgressNew = 0;
         int countOfProgressDone = 0;
+
         if (epics.get(epicID).getSubTasksId().isEmpty()) {
             epics.get(epicID).setProgress(progressNew);
             return;

@@ -1,9 +1,10 @@
 package model;
+
 import java.util.Objects;
 
 public class SubTask extends Task {
 
-    int epicId;
+    private int epicId;
 
     public SubTask(String title, String description, String progress, int epicId) {
         super(title, description, progress);

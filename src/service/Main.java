@@ -8,31 +8,32 @@ public class Main {
 
     public static void main(String[] args) {
         Manager manager = new Manager();
-        Task task1 = new Task("Погулять с собакой", "в 5 утра", "NEW");
-        Task task2 = new Task("изучить ФЗ #115 о Банкротстве физических лиц", "К понедельнику", "NEW");
-        Epic epic = new Epic("Сделать ремонт в квартире", "Давно пора");
-        Epic epic2 = new Epic("Сходить в магазин", "Купить продукты");
-        SubTask subtask1 = new SubTask("Начать ремонт с кухни", "Сначала выровнять стены", "NEW", 3);
-        SubTask subtask2 = new SubTask("Купить молоко", "Зайти за молоком в пятерочку", "NEW", 4);
-        SubTask subtask3 = new SubTask("Купить сахар", "это не обязательно", "NEW", 4);
+        Task task1 = new Task("РџРѕРіСѓР»СЏС‚СЊ СЃ СЃРѕР±Р°РєРѕР№", "РІ 5 СѓС‚СЂР°", "NEW");
+        Task task2 = new Task("РёР·СѓС‡РёС‚СЊ Р¤Р— #115 Рѕ Р‘Р°РЅРєСЂРѕС‚СЃС‚РІРµ С„РёР·РёС‡РµСЃРєРёС… Р»РёС†", "Рљ РїРѕРЅРµРґРµР»СЊРЅРёРєСѓ", "NEW");
+        Epic epic = new Epic("РЎРґРµР»Р°С‚СЊ СЂРµРјРѕРЅС‚ РІ РєРІР°СЂС‚РёСЂРµ", "Р”Р°РІРЅРѕ РїРѕСЂР°");
+        Epic epic2 = new Epic("РЎС…РѕРґРёС‚СЊ РІ РјР°РіР°Р·РёРЅ", "РљСѓРїРёС‚СЊ РїСЂРѕРґСѓРєС‚С‹");
+        SubTask subtask1 = new SubTask("РќР°С‡Р°С‚СЊ СЂРµРјРѕРЅС‚ СЃ РєСѓС…РЅРё", "РЎРЅР°С‡Р°Р»Р° РІС‹СЂРѕРІРЅСЏС‚СЊ СЃС‚РµРЅС‹", "NEW", 3);
+        SubTask subtask2 = new SubTask("РљСѓРїРёС‚СЊ РјРѕР»РѕРєРѕ", "Р—Р°Р№С‚Рё Р·Р° РјРѕР»РѕРєРѕРј РІ РїСЏС‚РµСЂРѕС‡РєСѓ", "NEW", 4);
+        SubTask subtask3 = new SubTask("РљСѓРїРёС‚СЊ СЃР°С…Р°СЂ", "СЌС‚Рѕ РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ", "NEW", 4);
         manager.createTask(task1);
         manager.createTask(task2);
         manager.createEpic(epic);
         manager.createEpic(epic2);
-        int subTaskId1 = manager.addSubTask(subtask1);
-        int subTaskId2 = manager.addSubTask(subtask2);
-        int subTaskId3 = manager.addSubTask(subtask3);
 
-        // Печатаем все таски после создания
+        manager.addSubTask(subtask1);
+        manager.addSubTask(subtask2);
+        manager.addSubTask(subtask3);
+
+        // РџРµС‡Р°С‚Р°РµРј РІСЃРµ С‚Р°СЃРєРё РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ
 
         System.out.println(manager.getAllTasks());
         System.out.println(manager.getAllEpics());
         System.out.println(manager.getAllSubTasks());
 
-        // обновляем таски, эпики и сабтаски
+        // РѕР±РЅРѕРІР»СЏРµРј С‚Р°СЃРєРё, СЌРїРёРєРё Рё СЃР°Р±С‚Р°СЃРєРё
 
-        subtask3.setTitle("Купить тростниковый сахар");
-        subtask3.setDescription("Вместо обычного");
+        subtask3.setTitle("РљСѓРїРёС‚СЊ С‚СЂРѕСЃС‚РЅРёРєРѕРІС‹Р№ СЃР°С…Р°СЂ");
+        subtask3.setDescription("Р’РјРµСЃС‚Рѕ РѕР±С‹С‡РЅРѕРіРѕ");
         subtask3.setProgress("NEW");
         subtask3.setEpicId(4);
         manager.updateSubTask(subtask3);
@@ -43,20 +44,27 @@ public class Main {
         manager.updateTask(task1);
         manager.updateTask(task2);
 
-        System.out.println("Распечатываем все таски после обновления" + "\n");
+        System.out.println("Р Р°СЃРїРµС‡Р°С‚С‹РІР°РµРј РІСЃРµ С‚Р°СЃРєРё РїРѕСЃР»Рµ РѕР±РЅРѕРІР»РµРЅРёСЏ" + "\n");
         System.out.println(manager.getAllTasks());
         System.out.println(manager.getAllEpics());
         System.out.println(manager.getAllSubTasks());
 
-        manager.removeSubTaskById(subTaskId1);
+        manager.removeSubTaskById(subtask1.getId());
 
-        System.out.println("распечатываем все таски после удаления одной сабтаски" + "\n");
+        System.out.println("СЂР°СЃРїРµС‡Р°С‚С‹РІР°РµРј РІСЃРµ С‚Р°СЃРєРё РїРѕСЃР»Рµ СѓРґР°Р»РµРЅРёСЏ РѕРґРЅРѕР№ СЃР°Р±С‚Р°СЃРєРё" + "\n");
         System.out.println(manager.getAllTasks());
         System.out.println(manager.getAllEpics());
         System.out.println(manager.getAllSubTasks());
 
-        manager.addSubTask(new SubTask("Ремонт завершен", "Ура", "DONE", 3));
-        System.out.println("Печатаем результаты после добавления новой сабтаски" + "\n");
+        manager.addSubTask(new SubTask("Р РµРјРѕРЅС‚ Р·Р°РІРµСЂС€РµРЅ", "РЈСЂР°", "DONE", 3));
+        System.out.println("РџРµС‡Р°С‚Р°РµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ РїРѕСЃР»Рµ РґРѕР±Р°РІР»РµРЅРёСЏ РЅРѕРІРѕР№ СЃР°Р±С‚Р°СЃРєРё" + "\n");
+        System.out.println(manager.getAllTasks());
+        System.out.println(manager.getAllEpics());
+        System.out.println(manager.getAllSubTasks());
+
+        System.out.println("РјРµРЅСЏРµРј СЌРїРёРє Рё РІС‹РІРѕРґРёРј СЂРµР·СѓР»СЊС‚Р°С‚ РЅР° СЌРєСЂР°РЅ"+"\n");
+        epic.setTitle("Р РµРјРѕРЅС‚ РЅСѓР¶РЅРѕ СЃРґРµР»Р°С‚СЊ РїРѕРІС‚РѕСЂРЅРѕ");
+        manager.updateEpic(epic);
         System.out.println(manager.getAllTasks());
         System.out.println(manager.getAllEpics());
         System.out.println(manager.getAllSubTasks());
