@@ -6,7 +6,7 @@ import model.Task;
 
 import java.util.*;
 
-public interface TaskManager {
+public interface TaskManager <Type> {
 
 
     public int createTask(Task task);
