@@ -6,11 +6,13 @@ import model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private final List<Task> browsingHistory = new ArrayList<>();
     private int id = 0;
 
     @Override
@@ -189,5 +191,14 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epics.get(epicID).setProgress(progressInProgress);
         }
+    }
+
+    /*getHistory должен возвращать последние 10 просмотренных задач. Просмотром будем считаться вызов у менеджера
+    методов получения задачи по идентификатору — getTask(), getSubtask() и getEpic(). От повторных просмотров
+    избавляться не нужно.*/
+    @Override
+    public List getHistory() {
+
+        return null;
     }
 }

@@ -6,7 +6,7 @@ import model.Task;
 
 import java.util.*;
 
-public interface TaskManager <Type> {
+public interface TaskManager {
 
 
     public int createTask(Task task);
@@ -49,6 +49,8 @@ public interface TaskManager <Type> {
     public ArrayList<SubTask> getListOfEpicsSubTasks(int epicId);
 
     public void changeEpicProgress(int epicID);
+
+    public List getHistory();
 
 
 }
