@@ -7,7 +7,7 @@ import model.Task;
 public class Main {
 
     public static void main(String[] args) {
-        Manager manager = new Manager();
+        TaskManager manager = new InMemoryTaskManager();
         Task task1 = new Task("Погулять с собакой", "в 5 утра", "NEW");
         Task task2 = new Task("изучить ФЗ #115 о Банкротстве физических лиц", "К понедельнику", "NEW");
         Epic epic = new Epic("Сделать ремонт в квартире", "Давно пора");
