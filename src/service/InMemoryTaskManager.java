@@ -111,6 +111,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskByID(int id) {
         browsingHistory.add(tasks.get(id));
+
         return tasks.get(id);
     }
 
@@ -197,7 +198,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getHistory() {
         List<Task> history;
-        if (browsingHistory.size() == 10 || browsingHistory.size() > 10) {
+        if (browsingHistory.size() > 10) {
             do {
                 browsingHistory.remove(0);
             } while (browsingHistory.size() != 10);

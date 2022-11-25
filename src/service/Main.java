@@ -47,13 +47,20 @@ public class Main {
         manager.updateSubTask(subtask1);
         task1.setProgress("DONE");
         task2.setProgress("IN_PROGRESS");
-        manager.updateTask(task1);
-        manager.updateTask(task2);
+        int Task = manager.updateTask(task1);
+        int Task2 = manager.updateTask(task2);
+
+        manager.getTaskByID(Task);
+        manager.getTaskByID(Task2);
 
         System.out.println("Распечатываем все таски после обновления" + "\n");
         System.out.println(manager.getAllTasks());
         System.out.println(manager.getAllEpics());
         System.out.println(manager.getAllSubTasks());
+
+        System.out.println("печатаем историю просмотров второй раз");
+
+        System.out.println(manager.getHistory());
 
         manager.removeSubTaskById(subtask1.getId());
 
@@ -77,6 +84,15 @@ public class Main {
         System.out.println(manager.getAllEpics());
         System.out.println(manager.getAllSubTasks());
 
+        manager.getEpicByID(3);
+        manager.getEpicByID(4);
+        manager.getTaskByID(1);
+        manager.getTaskByID(Task);
+        manager.getTaskByID(Task2);
+        manager.getEpicByID(4);
+        manager.getTaskByID(Task);
+        System.out.println("Печатаем историю просмотров третий раз" + "\n");
+        System.out.println(manager.getHistory());
 
     }
 }
