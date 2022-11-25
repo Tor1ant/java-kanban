@@ -47,7 +47,7 @@ public class Epic extends Task {
     public String toString() {
         return super.toString() + "Epic{" +
                 "subTasksId=" + subTasksId +
-                ", progress='" + progress + '\'' +
+                ", progress='" + status + '\'' +
                 "} " + "\n";
     }
 }

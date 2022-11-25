@@ -3,7 +3,6 @@ package service;
 import model.Epic;
 import model.SubTask;
 import model.Task;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,8 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
-    private final List<Task> browsingHistory = new ArrayList<>();
+    // private final List<Task> browsingHistory = new ArrayList<>();
+    HistoryManager historyManager = Managers.getDefaultHistory();
     private int id = 0;
 
     @Override
@@ -110,20 +110,20 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskByID(int id) {
-        browsingHistory.add(tasks.get(id));
+        historyManager.add(tasks.get(id));
 
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpicByID(int id) {
-        browsingHistory.add(epics.get(id));
+        historyManager.add(epics.get(id));
         return epics.get(id);
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
-        browsingHistory.add(subTasks.get(id));
+        historyManager.add(subTasks.get(id));
         return subTasks.get(id);
     }
 
@@ -163,48 +163,37 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void changeEpicProgress(int epicID) {
         ArrayList<SubTask> subTaskArrayList = getListOfEpicsSubTasks(epicID);
-        String progressNew = "NEW";
-        String progressInProgress = "IN_PROGRESS";
-        String progressDone = "DONE";
         int countOfProgressNew = 0;
         int countOfProgressDone = 0;
 
         if (epics.get(epicID).getSubTasksId().isEmpty()) {
-            epics.get(epicID).setProgress(progressNew);
+            epics.get(epicID).setProgress(Status.NEW);
             return;
         }
 
         for (SubTask subTask : subTaskArrayList) {
-            if (subTask.getProgress().equals(progressNew)) {
+            if (subTask.getProgress().equals(Status.NEW)) {
                 countOfProgressNew++;
-            } else if (subTask.getProgress().equals(progressDone)) {
+            } else if (subTask.getProgress().equals(Status.DONE)) {
                 countOfProgressDone++;
             }
         }
 
         if (countOfProgressNew == subTaskArrayList.size()) {
-            epics.get(epicID).setProgress(progressNew);
+            epics.get(epicID).setProgress(Status.NEW);
             return;
         }
 
         if (countOfProgressDone == subTaskArrayList.size()) {
-            epics.get(epicID).setProgress(progressDone);
+            epics.get(epicID).setProgress(Status.DONE);
         } else {
-            epics.get(epicID).setProgress(progressInProgress);
+            epics.get(epicID).setProgress(Status.IN_PROGRESS);
         }
     }
 
-
     @Override
     public List<Task> getHistory() {
-        List<Task> history;
-        if (browsingHistory.size() > 10) {
-            do {
-                browsingHistory.remove(0);
-            } while (browsingHistory.size() != 10);
 
-        }
-        history = browsingHistory;
-        return history;
+        return historyManager.getHistory();
     }
 }

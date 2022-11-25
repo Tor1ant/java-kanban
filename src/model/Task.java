@@ -1,15 +1,18 @@
 package model;
 
+import service.Status;
+
 public class Task {
     protected String title;
     protected String description;
     protected int id;
-    protected String progress; // -> ƒанна€ переменна€ имеет только 3 состо€ни€: NEW, IN_PROGRESS, DONE
+    protected Status status;
+    protected boolean isViewed = false;
 
-    public Task(String title, String description, String progress) {
+    public Task(String title, String description, Status status) {
         this.title = title;
         this.description = description;
-        this.progress = progress;
+        this.status = status;
     }
 
     public Task(String title, String description) {
@@ -33,12 +36,12 @@ public class Task {
         this.description = description;
     }
 
-    public String getProgress() {
-        return progress;
+    public Status getProgress() {
+        return status;
     }
 
-    public void setProgress(String progress) {
-        this.progress = progress;
+    public void setProgress(Status progress) {
+        this.status = progress;
     }
 
     public int getId() {
@@ -47,6 +50,14 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isViewed() {
+        return isViewed;
+    }
+
+    public void setViewed(boolean viewed) {
+        isViewed = viewed;
     }
 
     @Override
@@ -58,14 +69,14 @@ public class Task {
 
         if (!title.equals(task.title)) return false;
         if (!description.equals(task.description)) return false;
-        return progress.equals(task.progress);
+        return status.equals(task.status);
     }
 
     @Override
     public int hashCode() {
         int result = title.hashCode();
         result = 31 * result + description.hashCode();
-        result = 31 * result + progress.hashCode();
+        result = 31 * result + status.hashCode();
         return result;
     }
 
@@ -74,7 +85,7 @@ public class Task {
         return "model.Task{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", progress='" + progress + '\'' +
+                ", status='" + status + '\'' +
                 '}' + "\n";
     }
 }

@@ -9,48 +9,48 @@ import java.util.*;
 public interface TaskManager {
 
 
-    public int createTask(Task task);
+    int createTask(Task task);
 
 
-    public int createEpic(Epic epic);
+    int createEpic(Epic epic);
 
-    public int addSubTask(SubTask subTask);
+    int addSubTask(SubTask subTask);
 
-    public int updateTask(Task task);
+    int updateTask(Task task);
 
-    public int updateEpic(Epic epic);
+    int updateEpic(Epic epic);
 
-    public SubTask updateSubTask(SubTask subTask);
+    SubTask updateSubTask(SubTask subTask);
 
-    public ArrayList<Task> getAllTasks();
+    ArrayList<Task> getAllTasks();
 
-    public ArrayList<Epic> getAllEpics();
+    ArrayList<Epic> getAllEpics();
 
-    public ArrayList<SubTask> getAllSubTasks();
+    ArrayList<SubTask> getAllSubTasks();
 
-    public void removeAllTasks();
+    void removeAllTasks();
 
-    public void removeAllEpics();
+    void removeAllEpics();
 
-    public void removeAllSubTasks();
+    void removeAllSubTasks();
 
-    public Task getTaskByID(int id);
+    Task getTaskByID(int id);
 
-    public Epic getEpicByID(int id);
+    Epic getEpicByID(int id);
 
-    public SubTask getSubTaskById(int id);
+    SubTask getSubTaskById(int id);
 
-    public void removeTaskById(int id);
+    void removeTaskById(int id);
 
-    public void removeEpicById(int id);
+    void removeEpicById(int id);
 
-    public void removeSubTaskById(int id);
+    void removeSubTaskById(int id);
 
-    public ArrayList<SubTask> getListOfEpicsSubTasks(int epicId);
+    ArrayList<SubTask> getListOfEpicsSubTasks(int epicId);
 
-    public void changeEpicProgress(int epicID);
+    void changeEpicProgress(int epicID);
 
-    public List getHistory();
+    List<Task> getHistory();
 
 
 }

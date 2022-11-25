@@ -1,13 +1,14 @@
 package model;
 
+import service.Status;
 import java.util.Objects;
 
 public class SubTask extends Task {
 
     private int epicId;
 
-    public SubTask(String title, String description, String progress, int epicId) {
-        super(title, description, progress);
+    public SubTask(String title, String description, Status status, int epicId) {
+        super(title, description, status);
         this.epicId = epicId;
     }
 
@@ -37,7 +38,7 @@ public class SubTask extends Task {
     public String toString() {
         return super.toString() + "SubTask{" +
                 "epicId=" + epicId +
-                ", progress='" + progress + '\'' +
+                ", status='" + status + '\'' +
                 "} " + "\n";
     }
 }

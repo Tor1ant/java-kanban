@@ -7,14 +7,14 @@ import model.Task;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager manager = new InMemoryTaskManager();
-        Task task1 = new Task("Погулять с собакой", "в 5 утра", "NEW");
-        Task task2 = new Task("изучить ФЗ #115 о Банкротстве физических лиц", "К понедельнику", "NEW");
+        TaskManager manager = Managers.getDefault();
+        Task task1 = new Task("Погулять с собакой", "в 5 утра", Status.NEW);
+        Task task2 = new Task("изучить ФЗ #115 о Банкротстве физических лиц", "К понедельнику", Status.NEW);
         Epic epic = new Epic("Сделать ремонт в квартире", "Давно пора");
         Epic epic2 = new Epic("Сходить в магазин", "Купить продукты");
-        SubTask subtask1 = new SubTask("Начать ремонт с кухни", "Сначала выровнять стены", "NEW", 3);
-        SubTask subtask2 = new SubTask("Купить молоко", "Зайти за молоком в пятерочку", "NEW", 4);
-        SubTask subtask3 = new SubTask("Купить сахар", "это не обязательно", "NEW", 4);
+        SubTask subtask1 = new SubTask("Начать ремонт с кухни", "Сначала выровнять стены", Status.NEW, 3);
+        SubTask subtask2 = new SubTask("Купить молоко", "Зайти за молоком в пятерочку", Status.NEW, 4);
+        SubTask subtask3 = new SubTask("Купить сахар", "это не обязательно", Status.NEW, 4);
         manager.createTask(task1);
         manager.createTask(task2);
         manager.createEpic(epic);
@@ -40,13 +40,13 @@ public class Main {
 
         subtask3.setTitle("Купить тростниковый сахар");
         subtask3.setDescription("Вместо обычного");
-        subtask3.setProgress("NEW");
+        subtask3.setProgress(Status.NEW);
         subtask3.setEpicId(4);
         manager.updateSubTask(subtask3);
-        subtask1.setProgress("IN_PROGRESS");
+        subtask1.setProgress(Status.IN_PROGRESS);
         manager.updateSubTask(subtask1);
-        task1.setProgress("DONE");
-        task2.setProgress("IN_PROGRESS");
+        task1.setProgress(Status.DONE);
+        task2.setProgress(Status.IN_PROGRESS);
         int Task = manager.updateTask(task1);
         int Task2 = manager.updateTask(task2);
 
@@ -69,7 +69,7 @@ public class Main {
         System.out.println(manager.getAllEpics());
         System.out.println(manager.getAllSubTasks());
 
-        SubTask subTask5 = (new SubTask("Ремонт завершен", "Ура", "DONE", 3));
+        SubTask subTask5 = (new SubTask("Ремонт завершен", "Ура", Status.DONE, 3));
         manager.addSubTask(subTask5);
         System.out.println("Печатаем результаты после добавления новой сабтаски" + "\n");
         System.out.println(manager.getAllTasks());
@@ -94,5 +94,5 @@ public class Main {
         System.out.println("Печатаем историю просмотров третий раз" + "\n");
         System.out.println(manager.getHistory());
 
-    }
+   }
 }
