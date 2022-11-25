@@ -110,19 +110,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskByID(int id) {
-
+        browsingHistory.add(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpicByID(int id) {
-
+        browsingHistory.add(epics.get(id));
         return epics.get(id);
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
-
+        browsingHistory.add(subTasks.get(id));
         return subTasks.get(id);
     }
 
@@ -193,12 +193,17 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    /*getHistory должен возвращать последние 10 просмотренных задач. Просмотром будем считаться вызов у менеджера
-    методов получения задачи по идентификатору — getTask(), getSubtask() и getEpic(). От повторных просмотров
-    избавляться не нужно.*/
-    @Override
-    public List getHistory() {
 
-        return null;
+    @Override
+    public List<Task> getHistory() {
+        List<Task> history;
+        if (browsingHistory.size() == 10 || browsingHistory.size() > 10) {
+            do {
+                browsingHistory.remove(0);
+            } while (browsingHistory.size() != 10);
+
+        }
+        history = browsingHistory;
+        return history;
     }
 }

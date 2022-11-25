@@ -24,11 +24,17 @@ public class Main {
         manager.addSubTask(subtask2);
         manager.addSubTask(subtask3);
 
+        manager.getEpicByID(3);
+        manager.getEpicByID(4);
+        manager.getTaskByID(1);
         // Печатаем все таски после создания
 
         System.out.println(manager.getAllTasks());
         System.out.println(manager.getAllEpics());
         System.out.println(manager.getAllSubTasks());
+
+        System.out.println("печатаем историю просмотров");
+        System.out.println(manager.getHistory());
 
         // обновляем таски, эпики и сабтаски
 
@@ -70,5 +76,7 @@ public class Main {
         System.out.println(manager.getAllTasks());
         System.out.println(manager.getAllEpics());
         System.out.println(manager.getAllSubTasks());
+
+
     }
 }
