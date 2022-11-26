@@ -7,7 +7,6 @@ public class Task {
     protected String description;
     protected int id;
     protected Status status;
-    protected boolean isViewed = false;
 
     public Task(String title, String description, Status status) {
         this.title = title;
@@ -50,14 +49,6 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public boolean isViewed() {
-        return isViewed;
-    }
-
-    public void setViewed(boolean viewed) {
-        isViewed = viewed;
     }
 
     @Override

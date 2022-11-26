@@ -8,9 +8,7 @@ import java.util.*;
 
 public interface TaskManager {
 
-
     int createTask(Task task);
-
 
     int createEpic(Epic epic);
 
@@ -51,6 +49,5 @@ public interface TaskManager {
     void changeEpicProgress(int epicID);
 
     List<Task> getHistory();
-
 
 }
