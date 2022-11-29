@@ -93,6 +93,7 @@ public class Main {
         manager.getTaskByID(Task);
         System.out.println("Печатаем историю просмотров третий раз" + "\n");
         System.out.println(manager.getHistory());
+        manager.removeEpicById(4);
 
    }
 }
