@@ -3,6 +3,7 @@ package service;
 import model.Epic;
 import model.SubTask;
 import model.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -137,6 +138,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeEpicById(int id) {
         for (Integer subtaskId : epics.get(id).getSubTasksId()) {
             subTasks.remove(subtaskId);
+            historyManager.remove(subtaskId);
         }
         epics.remove(id);
         historyManager.remove(id);
