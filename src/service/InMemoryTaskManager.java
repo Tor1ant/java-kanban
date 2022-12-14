@@ -3,17 +3,14 @@ package service;
 import model.Epic;
 import model.SubTask;
 import model.Task;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 
 public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
-
     private final HistoryManager historyManager = Managers.getDefaultHistory();
     private int id = 0;
 
@@ -93,6 +90,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeAllTasks() {
         tasks.clear();
+
     }
 
     @Override
@@ -132,6 +130,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeTaskById(int id) {
         tasks.remove(id);
+        historyManager.remove(id);
     }
 
     @Override
@@ -140,6 +139,7 @@ public class InMemoryTaskManager implements TaskManager {
             subTasks.remove(subtaskId);
         }
         epics.remove(id);
+        historyManager.remove(id);
     }
 
     @Override
@@ -148,6 +148,7 @@ public class InMemoryTaskManager implements TaskManager {
         epics.get(epicId).removeSubTask(id);
         subTasks.remove(id);
         changeEpicProgress(epicId);
+        historyManager.remove(id);
     }
 
     @Override

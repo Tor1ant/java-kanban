@@ -1,6 +1,8 @@
 package service;
 
 import model.Task;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,12 +21,14 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
+        //здесь должен быть кастомный ремувинг, который может удалять таску по id
+        // для этого нужно реализовать кастомный линкедлист
         browsingHistory.removeIf(task -> task.getId() == id);
     }
 
     @Override
     public List<Task> getHistory() {
-
-        return browsingHistory;
+ List<Task> browsingHistoryForReturn = new ArrayList<>(browsingHistory);
+        return browsingHistoryForReturn;
     }
 }
