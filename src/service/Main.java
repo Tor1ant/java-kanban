@@ -4,102 +4,8 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 
-
-import java.util.List;
-
 public class Main {
 
- /*   public static void main(String[] args) {
-        TaskManager manager = Managers.getDefault();
-        Task task1 = new Task("Погулять с собакой", "в 5 утра", Status.NEW);
-        Task task2 = new Task("изучить ФЗ #115 о Банкротстве физических лиц", "К понедельнику", Status.NEW);
-        Epic epic = new Epic("Сделать ремонт в квартире", "Давно пора");
-        Epic epic2 = new Epic("Сходить в магазин", "Купить продукты");
-        SubTask subtask1 = new SubTask("Начать ремонт с кухни", "Сначала выровнять стены", Status.NEW, 3);
-        SubTask subtask2 = new SubTask("Купить молоко", "Зайти за молоком в пятерочку", Status.NEW, 4);
-        SubTask subtask3 = new SubTask("Купить сахар", "это не обязательно", Status.NEW, 4);
-        manager.createTask(task1);
-        manager.createTask(task2);
-        manager.createEpic(epic);
-        manager.createEpic(epic2);
-
-        manager.addSubTask(subtask1);
-        manager.addSubTask(subtask2);
-        manager.addSubTask(subtask3);
-
-        manager.getEpicByID(3);
-        manager.getEpicByID(4);
-        manager.getTaskByID(1);
-        // Печатаем все таски после создания
-
-        System.out.println(manager.getAllTasks());
-        System.out.println(manager.getAllEpics());
-        System.out.println(manager.getAllSubTasks());
-
-        System.out.println("печатаем историю просмотров");
-        System.out.println(manager.getHistory());
-
-        // обновляем таски, эпики и сабтаски
-
-        subtask3.setTitle("Купить тростниковый сахар");
-        subtask3.setDescription("Вместо обычного");
-        subtask3.setProgress(Status.NEW);
-        subtask3.setEpicId(4);
-        manager.updateSubTask(subtask3);
-        subtask1.setProgress(Status.IN_PROGRESS);
-        manager.updateSubTask(subtask1);
-        task1.setProgress(Status.DONE);
-        task2.setProgress(Status.IN_PROGRESS);
-        int Task = manager.updateTask(task1);
-        int Task2 = manager.updateTask(task2);
-
-        manager.getTaskByID(Task);
-        manager.getTaskByID(Task2);
-
-        System.out.println("Распечатываем все таски после обновления" + "\n");
-        System.out.println(manager.getAllTasks());
-        System.out.println(manager.getAllEpics());
-        System.out.println(manager.getAllSubTasks());
-
-        System.out.println("печатаем историю просмотров второй раз");
-
-        System.out.println(manager.getHistory());
-
-        manager.removeSubTaskById(subtask1.getId());
-
-        System.out.println("распечатываем все таски после удаления одной сабтаски" + "\n");
-        System.out.println(manager.getAllTasks());
-        System.out.println(manager.getAllEpics());
-        System.out.println(manager.getAllSubTasks());
-
-        SubTask subTask5 = (new SubTask("Ремонт завершен", "Ура", Status.DONE, 3));
-        manager.addSubTask(subTask5);
-        System.out.println("Печатаем результаты после добавления новой сабтаски" + "\n");
-        System.out.println(manager.getAllTasks());
-        System.out.println(manager.getAllEpics());
-        System.out.println(manager.getAllSubTasks());
-
-        System.out.println("меняем эпик и выводим результат на экран" + "\n");
-        epic.setTitle("Ремонт нужно сделать повторно");
-        manager.updateEpic(epic);
-        manager.removeSubTaskById(subTask5.getId());
-        System.out.println(manager.getAllTasks());
-        System.out.println(manager.getAllEpics());
-        System.out.println(manager.getAllSubTasks());
-
-        manager.getEpicByID(3);
-        manager.getEpicByID(4);
-        manager.getTaskByID(1);
-        manager.getTaskByID(Task);
-        manager.getTaskByID(Task2);
-        manager.getEpicByID(4);
-        manager.getTaskByID(Task);
-        System.out.println("Печатаем историю просмотров третий раз" + "\n");
-        System.out.println(manager.getHistory());
-        manager.removeEpicById(4);
-
-   }*/
-    //рефакторить всё.!!!!!!!!!!!!!!!!
     public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
 
@@ -131,15 +37,17 @@ public class Main {
         taskManager.getSubTaskById(subTask3.getId());
         taskManager.getSubTaskById(subtask2.getId());
         System.out.println("Печатаем историю запросов" + "\n");
-
         System.out.println(taskManager.getHistory());
 
         System.out.println("делаем еще один вызов таски с id1 и эпика с id 4 и печатаем историю вызовов" + "\n");
-
         taskManager.getTaskByID(task1.getId());
         taskManager.getEpicByID(epicWithSubTasks.getId());
         System.out.println(taskManager.getHistory());
 
+        System.out.println("удаляем сабтаску с id 5 и печатаем историю" + "\n");
+        taskManager.removeSubTaskById(subtask1.getId());
+
+        System.out.println(taskManager.getHistory());
         System.out.println("удаляем таску с id1 и печатаем историю" + "\n");
         taskManager.removeTaskById(task1.getId());
 
@@ -147,7 +55,9 @@ public class Main {
 
         System.out.println("удаляем эпик с тремя подзадачами"+"\n");
         taskManager.removeEpicById(epicWithSubTasks.getId());
+
         System.out.println("Печатаем историю запросов в последний раз"+"\n");
+        taskManager.getEpicByID(epicWithoutSubTasks.getId());
         System.out.println(taskManager.getHistory());
     }
 }

@@ -1,12 +1,10 @@
 package service;
 
 import model.Task;
-
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final CustomLinkedList<Task> browsingHistory = new CustomLinkedList<>();
-
 
     @Override
     public void add(Task task) {
@@ -16,40 +14,21 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        //здесь должен быть кастомный ремувинг, который может удалять таску по id
-        // для этого нужно реализовать кастомный линкедлист
         browsingHistory.removeNode(browsingHistory.idAndTaskNodes.get(id));
-
     }
 
     @Override
     public List<Task> getHistory() {
-
         return browsingHistory.getTasks();
     }
-
 }
-
 
 class CustomLinkedList<E extends Task> {
     private TaskNode<E> head;
     private TaskNode<E> tail;
-    private int size = 0;
-    HashMap<Integer, TaskNode> idAndTaskNodes = new HashMap<>();
-
-/*    CustomLinkedList() {
-        tail = new TaskNode<>(null, head, null);
-        head = new TaskNode<>(null, null, tail);
-    }*/
+    Map<Integer, TaskNode> idAndTaskNodes = new LinkedHashMap<>();
 
     public void linkLast(E e) {
-
-/*        TaskNode<E> prev = secondTaskNode;
-        prev.setCurrentTask(e);
-        secondTaskNode = new TaskNode<>(null, prev, null);
-        prev.setNextTask(secondTaskNode);
-        Task task = (Task) e;
-        idAndTaskNodes.put(task.getId(), secondTaskNode);*/
         final TaskNode<E> oldTail = tail;
         final TaskNode<E> newNode = new TaskNode<>(null, e, oldTail);
         tail = newNode;
@@ -57,16 +36,14 @@ class CustomLinkedList<E extends Task> {
             head = newNode;
         } else {
             oldTail.prevTask = newNode;
-            size++;
         }
-        Task task = (Task) e;
-        idAndTaskNodes.put(task.getId(), newNode);
+        idAndTaskNodes.put(e.getId(), newNode);
     }
 
     public ArrayList<Task> getTasks() {
         ArrayList<Task> taskArrayList = new ArrayList<>();
         for (TaskNode taskNode : idAndTaskNodes.values()) {
-            taskArrayList.add(taskNode.currentE);
+            taskArrayList.add(taskNode.currentN);
         }
         return taskArrayList;
     }
@@ -74,59 +51,52 @@ class CustomLinkedList<E extends Task> {
     public void removeNode(TaskNode taskNode) {
         if (taskNode != null) {
             if (taskNode.nextTask == null) {
-                idAndTaskNodes.remove(taskNode.currentE.getId());
+                idAndTaskNodes.remove(taskNode.currentN.getId());
                 taskNode.prevTask.setNextTask(null);
                 taskNode.setPrevTask(null);
-                size--;
 
             } else if (taskNode.prevTask == null) {
-                idAndTaskNodes.remove(taskNode.currentE.getId());
+                idAndTaskNodes.remove(taskNode.currentN.getId());
                 taskNode.setNextTask(null);
-             //   taskNode.nextTask.setPrevTask(null);
-                size--;
 
             } else {
-                if (taskNode.prevTask != null && taskNode.nextTask != null) {
-                    idAndTaskNodes.remove(taskNode.currentE.getId());
-                    taskNode.prevTask.setNextTask(taskNode.nextTask);
-                    taskNode.nextTask.setPrevTask(taskNode.prevTask);
-                    taskNode.currentE = null;
-                    size--;
-                }
+                idAndTaskNodes.remove(taskNode.currentN.getId());
+                taskNode.prevTask.setNextTask(taskNode.nextTask);
+                taskNode.nextTask.setPrevTask(taskNode.prevTask);
+                taskNode.currentN = null;
             }
         }
     }
 
+    protected class TaskNode<N extends Task> {
+        private N currentN;
+        private TaskNode<N> prevTask;
+        private TaskNode<N> nextTask;
 
-    protected class TaskNode<E extends Task> {
-        private E currentE;
-        private TaskNode<E> prevTask;
-        private TaskNode<E> nextTask;
-
-        public TaskNode(TaskNode<E> prevTask, E currentE, TaskNode<E> nextTask) {
-            this.currentE = currentE;
+        public TaskNode(TaskNode<N> prevTask, N currentN, TaskNode<N> nextTask) {
+            this.currentN = currentN;
             this.prevTask = prevTask;
             this.nextTask = nextTask;
         }
 
-        public void setCurrentTask(E currentE) {
-            this.currentE = currentE;
+        public void setCurrentTask(N currentN) {
+            this.currentN = currentN;
         }
 
-        public void setNextTask(TaskNode<E> nextTask) {
+        public void setNextTask(TaskNode<N> nextTask) {
             this.nextTask = nextTask;
         }
 
-        public void setPrevTask(TaskNode<E> prevTask) {
+        public void setPrevTask(TaskNode<N> prevTask) {
             this.prevTask = prevTask;
         }
 
-        public void setCurrentE(E currentE) {
-            this.currentE = currentE;
+        public void setCurrentE(N currentN) {
+            this.currentN = currentN;
         }
 
-        public E getCurrentE() {
-            return currentE;
+        public N getCurrentE() {
+            return currentN;
         }
     }
 }
