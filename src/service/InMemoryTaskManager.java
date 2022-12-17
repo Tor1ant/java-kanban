@@ -3,6 +3,7 @@ package service;
 import model.Epic;
 import model.SubTask;
 import model.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ public class InMemoryTaskManager implements TaskManager {
         id++;
         epic.setId(id);
         epics.put(id, epic);
+        changeEpicProgress(epic.getId());
 
         return epic.getId();
     }

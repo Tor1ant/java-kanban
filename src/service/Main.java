@@ -7,8 +7,7 @@ import model.Task;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = Managers.getDefault();
-
+        TaskManager taskManager = new InMemoryTaskManager();
         Task task1 = new Task("Погулять с собакой", "в 5 утра", Status.NEW);
         Task task2 = new Task("изучить ФЗ #115 о Банкротстве физических лиц", "К понедельнику", Status.NEW);
         Epic epicWithoutSubTasks = new Epic("Сделать ремонт в квартире", "Давно пора");
@@ -42,6 +41,7 @@ public class Main {
         System.out.println("делаем еще один вызов таски с id1 и эпика с id 4 и печатаем историю вызовов" + "\n");
         taskManager.getTaskByID(task1.getId());
         taskManager.getEpicByID(epicWithSubTasks.getId());
+        subtask1.setProgress(Status.DONE);
         System.out.println(taskManager.getHistory());
 
         System.out.println("удаляем сабтаску с id 5 и печатаем историю" + "\n");
@@ -53,10 +53,10 @@ public class Main {
 
         System.out.println(taskManager.getHistory());
 
-        System.out.println("удаляем эпик с тремя подзадачами"+"\n");
+        System.out.println("удаляем эпик с тремя подзадачами" + "\n");
         taskManager.removeEpicById(epicWithSubTasks.getId());
 
-        System.out.println("Печатаем историю запросов в последний раз"+"\n");
+        System.out.println("Печатаем историю запросов в последний раз" + "\n");
         taskManager.getEpicByID(epicWithoutSubTasks.getId());
         System.out.println(taskManager.getHistory());
     }
