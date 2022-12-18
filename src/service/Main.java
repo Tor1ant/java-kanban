@@ -42,6 +42,7 @@ public class Main {
         taskManager.getTaskByID(task1.getId());
         taskManager.getEpicByID(epicWithSubTasks.getId());
         subtask1.setProgress(Status.DONE);
+        taskManager.updateSubTask(subtask1);
         System.out.println(taskManager.getHistory());
 
         System.out.println("удаляем сабтаску с id 5 и печатаем историю" + "\n");
