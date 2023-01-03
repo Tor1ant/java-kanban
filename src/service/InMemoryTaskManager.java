@@ -19,8 +19,6 @@ public class InMemoryTaskManager implements TaskManager {
         id++;
         task.setId(id);
         tasks.put(id, task);
-
-        return task.getId();
     }
 
     @Override
@@ -29,8 +27,6 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setId(id);
         epics.put(id, epic);
         changeEpicProgress(epic.getId());
-
-        return epic.getId();
     }
 
     @Override
