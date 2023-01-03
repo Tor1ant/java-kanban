@@ -1,12 +1,13 @@
 package service;
 
 import model.Task;
+
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private TaskNode head;
     private TaskNode tail;
-    Map<Integer, TaskNode> idAndTaskNodes = new HashMap<>();
+    private Map<Integer, TaskNode> idAndTaskNodes = new HashMap<>();
 
     @Override
     public void add(Task task) {
@@ -63,7 +64,8 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
         }
     }
-    private  class TaskNode {
+
+    private class TaskNode {
         private final Task currentTask;
         private TaskNode prevTask;
         private TaskNode nextTask;
