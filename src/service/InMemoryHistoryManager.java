@@ -65,6 +65,10 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
+    public Map<Integer, TaskNode> getIdAndTaskNodes() {
+        return idAndTaskNodes;
+    }
+
     private class TaskNode {
         private final Task currentTask;
         private TaskNode prevTask;

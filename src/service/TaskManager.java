@@ -14,11 +14,11 @@ public interface TaskManager {
 
     void addSubTask(SubTask subTask);
 
-    int updateTask(Task task);
+    void updateTask(Task task);
 
-    int updateEpic(Epic epic);
+    void updateEpic(Epic epic);
 
-    SubTask updateSubTask(SubTask subTask);
+    void updateSubTask(SubTask subTask);
 
     ArrayList<Task> getAllTasks();
 
