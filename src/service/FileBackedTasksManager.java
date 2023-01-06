@@ -133,13 +133,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         save();
     }
 
-    String taskToString(Task task) {
+   private String taskToString(Task task) {
         StringBuilder taskToCSV = new StringBuilder();
         if (task instanceof SubTask) {
             taskToCSV.append(task.getId()).append(",").append(TaskType.SUBTASK).append(",").append(task.getTitle()).
                     append(",").append(task.getProgress()).append(",").append(task.getDescription()).append(",").
                     append(((SubTask) task).getEpicId());
-
         } else if (task instanceof Epic) {
             taskToCSV.append(task.getId()).append(",").append(TaskType.EPIC).append(",").append(task.getTitle()).
                     append(",").append(task.getProgress()).append(",").append(task.getDescription());
@@ -150,7 +149,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return taskToCSV.toString();
     }
 
-    Task stringToTask(String value) {
+   private Task stringToTask(String value) {
         if (value != null) {
             String[] tasksInString = value.split(",");
             switch (TaskType.valueOf(tasksInString[1])) {
