@@ -21,6 +21,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     private void save() {
         final String historyInString = historyToString((InMemoryHistoryManager) historyManager);
         try (FileWriter fileWriter = new FileWriter(String.valueOf(pathToSaveData))) {
+            fileWriter.write("id,type,name,status,description,epic");
+            fileWriter.write("\n");
             for (Task task : tasks.values()) {
                 fileWriter.write(taskToString(task));
                 fileWriter.write("\n");
@@ -225,8 +227,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     taskInString = bufferedReader.readLine();
                     tasksId = FileBackedTasksManager.historyFromString(taskInString);
                     break;
+                } else if (!taskInString.startsWith("id")) {
+                    taskList.add(fileBackedTasksManager.stringToTask(taskInString));
                 }
-                taskList.add(fileBackedTasksManager.stringToTask(taskInString));
             }
             for (Task task : taskList) {
                 if (task instanceof SubTask) {

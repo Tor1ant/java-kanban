@@ -70,7 +70,7 @@ public class Main {
         System.out.println(taskManager.getHistory());
 
         //выключаем программу
-        TaskManager taskManagerAfterESC = FileBackedTasksManager.loadFromFile(Paths.get("src/sources/SaveData.csv").toFile());
+        TaskManager taskManagerAfterESC = FileBackedTasksManager.loadFromFile(Paths.get("SaveData.csv").toFile());
 
         //после запуска программы печатаем историю запросов
         System.out.println("после запуска программы печатаем историю запросов");
