@@ -5,6 +5,7 @@ import model.SubTask;
 import model.Task;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -133,7 +134,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         save();
     }
 
-   private String taskToString(Task task) {
+    private String taskToString(Task task) {
         StringBuilder taskToCSV = new StringBuilder();
         if (task instanceof SubTask) {
             taskToCSV.append(task.getId()).append(",").append(TaskType.SUBTASK).append(",").append(task.getTitle()).
@@ -149,7 +150,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return taskToCSV.toString();
     }
 
-   private Task stringToTask(String value) {
+    private Task stringToTask(String value) {
         if (value != null) {
             String[] tasksInString = value.split(",");
             switch (TaskType.valueOf(tasksInString[1])) {
@@ -230,13 +231,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             }
             for (Task task : taskList) {
                 if (task instanceof SubTask) {
-                    //   fileBackedTasksManager.addSubTask((SubTask) task);
                     fileBackedTasksManager.subTasks.put(task.getId(), (SubTask) task);
                 } else if (task instanceof Epic) {
-                    //  fileBackedTasksManager.createEpic((Epic) task);
                     fileBackedTasksManager.epics.put(task.getId(), (Epic) task);
                 } else if (task != null) {
-                    // fileBackedTasksManager.createTask(task);
                     fileBackedTasksManager.tasks.put(task.getId(), task);
                 }
                 if (task != null && tasksId.contains(task.getId())) {
