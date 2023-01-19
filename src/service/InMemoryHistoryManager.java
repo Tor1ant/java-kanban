@@ -55,10 +55,10 @@ public class InMemoryHistoryManager implements HistoryManager {
             if (taskNode.prevTask != null && taskNode.nextTask != null) {
                 taskNode.prevTask.nextTask = taskNode.nextTask;
                 taskNode.nextTask.prevTask = taskNode.prevTask;
-            } else if (taskNode.prevTask == null) {
+            } else if (taskNode.prevTask == null && idAndTaskNodes.size() != 1) {
                 head = taskNode.nextTask;
                 head.prevTask = null;
-            } else {
+            } else if (idAndTaskNodes.size() != 1) {
                 tail = taskNode.prevTask;
                 tail.nextTask = null;
             }

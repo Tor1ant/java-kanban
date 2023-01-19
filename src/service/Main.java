@@ -30,7 +30,9 @@ public class Main {
 
         //Запрашиваем созданные задачи несколько раз в разном порядке
         taskManager.getTaskByID(task1.getId());
+        taskManager.getTaskByID(task1.getId());
         taskManager.getEpicByID(epicWithoutSubTasks.getId());
+        taskManager.getTaskByID(task1.getId());
         taskManager.getSubTaskById(subtask1.getId());
         taskManager.getEpicByID(epicWithSubTasks.getId());
         taskManager.getTaskByID(task2.getId());
@@ -75,5 +77,14 @@ public class Main {
         //после запуска программы печатаем историю запросов
         System.out.println("после запуска программы печатаем историю запросов");
         System.out.println(taskManagerAfterESC.getHistory());
+        Task task15 = new Task("Погулять с собакой", "в 5 утра", Status.NEW);
+        Task task25 = new Task("изучить ФЗ #115 о Банкротстве физических лиц", "К понедельнику", Status.NEW);
+        taskManagerAfterESC.createTask(task15);
+        taskManagerAfterESC.createTask(task25);
+        taskManagerAfterESC.getTaskByID(task15.getId());
+        taskManagerAfterESC.getTaskByID(task25.getId());
+        taskManagerAfterESC.getTaskByID(task15.getId());
+        System.out.println(taskManagerAfterESC.getHistory());
+
     }
 }
