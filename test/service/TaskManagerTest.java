@@ -12,7 +12,7 @@ import java.util.List;
 
 class TaskManagerTest {
 
-    TaskManager taskManager = Managers.getDefault();
+    FileBackedTasksManager taskManager = new FileBackedTasksManager();
     Task task;
     Epic epic;
     SubTask subTask;
@@ -32,12 +32,15 @@ class TaskManagerTest {
         List<Task> taskList = taskManager.getAllTasks();
         boolean isEqualsTasks = taskList.get(0).equals(task);
 
-        Assertions.assertEquals(1, taskManager.getAllTasks().size(),"Неверное количество задач");
+        Assertions.assertEquals(1, taskManager.getAllTasks().size(), "Неверное количество задач");
         Assertions.assertEquals("Testing", taskManager.getTaskByID(1).getDescription());
         Assertions.assertNotNull(taskManager.getAllTasks(), "Список задач пуст");
         Assertions.assertNotNull(taskManager.getTaskByID(1), "Задача не найдена");
         Assertions.assertEquals(task, taskManager.getTaskByID(1), "Задачи не совпадают");
         Assertions.assertTrue(isEqualsTasks);
+        NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class,
+                () -> taskManager.getTaskByID(2));
+        Assertions.assertNull(nullPointerException.getMessage(), "таска с не правильным номером");
 
     }
 
@@ -47,7 +50,10 @@ class TaskManagerTest {
         taskManager.createEpic(epic);
         Assertions.assertEquals("NEW", epic.getProgress().toString());
         Assertions.assertEquals(1, taskManager.getAllEpics().size());
-        //начать отсюда
+        Assertions.assertFalse(taskManager.getAllEpics().isEmpty());
+        NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class,
+                () -> taskManager.getEpicByID(2));
+        Assertions.assertNull(nullPointerException.getMessage(), "эпик с не правильным номером");
     }
 
     @Test
@@ -57,6 +63,10 @@ class TaskManagerTest {
         Assertions.assertEquals("NEW", epic.getProgress().toString());
         Assertions.assertEquals(1, subTask.getEpicId());
         Assertions.assertEquals(1, taskManager.getAllSubTasks().size());
+        NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class,
+                () -> taskManager.getSubTaskById(3));
+        Assertions.assertNull(nullPointerException.getMessage(), "сабтаска" +
+                " с не правильным номером");
     }
 
     @Test

@@ -1,5 +1,4 @@
 id,type,name,status,description,epic
-1,EPIC,Сходить в кино,NEW,не покупать попкорн
-2,SUBTASK,Купить билеты,NEW,На фильм,1
-3,SUBTASK,Купить сладкую вату,NEW,без описания,1
+1,TASK,Выйти на улицу,null,в 20:00
 
+1
