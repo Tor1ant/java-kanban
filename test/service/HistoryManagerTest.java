@@ -4,6 +4,7 @@ import model.Task;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import java.util.List;
 
 class HistoryManagerTest {
     Task task = new Task("Выйти на улицу", "в 20:00");
@@ -25,11 +26,17 @@ class HistoryManagerTest {
         tasksManager.createTask(task);
         tasksManager.createTask(task2);
         tasksManager.getTaskByID(1);
-
-
     }
 
+    @DisplayName("Проверка получения истории вызовов тасок")
     @Test
-    void getHistory() {
+    void shouldReturnTasksListWhenGetHistoryCalled() {
+        Task task2 = new Task("Изучить интеллектуальное право", "Раздел 'авторские права'");
+        tasksManager.createTask(task);
+        tasksManager.createTask(task2);
+        tasksManager.getTaskByID(1);
+        tasksManager.getTaskByID(1);
+        List<Task> taskList = tasksManager.getHistory();
+         Assertions.assertEquals(2, taskList.size(), "Размер истории не совпадает с нужным значением");
     }
 }

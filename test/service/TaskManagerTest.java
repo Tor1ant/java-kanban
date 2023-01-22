@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 
 class TaskManagerTest {
 
@@ -40,7 +42,7 @@ class TaskManagerTest {
         Assertions.assertTrue(isEqualsTasks);
         NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class,
                 () -> taskManager.getTaskByID(2));
-        Assertions.assertNull(nullPointerException.getMessage(), "таска с не правильным номером");
+        assertNull(nullPointerException.getMessage(), "таска с не правильным номером");
 
     }
 
@@ -53,7 +55,7 @@ class TaskManagerTest {
         Assertions.assertFalse(taskManager.getAllEpics().isEmpty());
         NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class,
                 () -> taskManager.getEpicByID(2));
-        Assertions.assertNull(nullPointerException.getMessage(), "эпик с не правильным номером");
+        assertNull(nullPointerException.getMessage(), "эпик с не правильным номером");
     }
 
     @Test
@@ -65,7 +67,7 @@ class TaskManagerTest {
         Assertions.assertEquals(1, taskManager.getAllSubTasks().size());
         NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class,
                 () -> taskManager.getSubTaskById(3));
-        Assertions.assertNull(nullPointerException.getMessage(), "сабтаска" +
+        assertNull(nullPointerException.getMessage(), "сабтаска" +
                 " с не правильным номером");
     }
 
