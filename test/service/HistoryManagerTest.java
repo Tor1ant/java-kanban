@@ -10,6 +10,7 @@ import java.util.List;
 class HistoryManagerTest {
     Task task = new Task("Выйти на улицу", "в 20:00");
     Task task2 = new Task("Изучить интеллектуальное право", "Раздел 'авторские права'");
+    Task task3 = new Task("Выучить Английский язык", "до 2025 года");
     FileBackedTasksManager tasksManager = new FileBackedTasksManager();
 
     @DisplayName("Проверка добавления таски в историю вызовов")
@@ -31,7 +32,6 @@ class HistoryManagerTest {
         tasksManager.getTaskByID(1);
         List<Task> taskList = tasksManager.getHistory();
         Assertions.assertEquals(2, taskList.size(), "Размер истории не совпадает с нужным значением");
-
     }
 
     @DisplayName("Проверка удаления таски из истории вызовов при вызове этой же таски")
@@ -47,14 +47,27 @@ class HistoryManagerTest {
         Assertions.assertEquals(task.toString(), testTask.toString());
     }
 
-    @DisplayName("Проверка получения истории вызовов тасок")
+    @DisplayName("Проверка удаления таски из середины истории вызовов")
     @Test
+    void shouldReturnTheStoryWithoutTheTaskThatWasInTheMiddle() {
+        tasksManager.createTask(task);
+        tasksManager.createTask(task2);
+        tasksManager.createTask(task3);
+        tasksManager.getTaskByID(1);
+        tasksManager.getTaskByID(2);
+        tasksManager.getTaskByID(3);
+        tasksManager.removeTaskById(2);
+        boolean taskInTheList = tasksManager.getHistory().contains(task2);
+        Assertions.assertFalse(taskInTheList, "таска содержится в истории вызовов");
+    }
+
+    @DisplayName("Проверка получения истории вызовов тасок")
+    @Test()
     void shouldReturnTasksListWhenGetHistoryCalled() {
-        Task task2 = new Task("Изучить интеллектуальное право", "Раздел 'авторские права'");
         tasksManager.createTask(task);
         tasksManager.createTask(task2);
         tasksManager.getTaskByID(1);
-        tasksManager.getTaskByID(1);
+        tasksManager.getTaskByID(2);
         List<Task> taskList = tasksManager.getHistory();
         Assertions.assertEquals(2, taskList.size(), "Размер истории не совпадает с нужным значением");
     }

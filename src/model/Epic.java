@@ -12,9 +12,7 @@ public class Epic extends Task {
 
     public Epic(String title, String description) {
         super(title, description);
-        if (subTasksId.isEmpty()) {
-            status = Status.NEW;
-        }
+        status = Status.NEW;
     }
 
     public ArrayList<Integer> getSubTasksId() {

@@ -18,13 +18,19 @@ class EpicTest {
     @BeforeEach
     public void createNewEpic() {
         fileBackedTasksManager.createEpic(epic = new Epic("Сходить в кино", "не покупать попкорн"));
-
     }
 
     @Test
     public void shouldEpicStatusIsNewWhenSubTasksIdIsEmpty() {
         Assertions.assertEquals(Status.NEW.toString(), String.valueOf(epic.getProgress()));
+    }
 
+    @Test
+    public void shouldTrueWhenCallEquals() {
+        Epic epic = new Epic("Сходить в кино", "не покупать попкорн");
+        fileBackedTasksManager.createEpic(epic);
+        boolean isEqualEpics = epic.equals(new Epic("Сходить в кино", "не покупать попкорн"));
+        Assertions.assertTrue(isEqualEpics);
     }
 
     @Test
