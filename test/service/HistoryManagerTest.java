@@ -4,10 +4,12 @@ import model.Task;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import java.util.List;
 
 class HistoryManagerTest {
     Task task = new Task("Выйти на улицу", "в 20:00");
+    Task task2 = new Task("Изучить интеллектуальное право", "Раздел 'авторские права'");
     FileBackedTasksManager tasksManager = new FileBackedTasksManager();
 
     @DisplayName("Проверка добавления таски в историю вызовов")
@@ -19,13 +21,30 @@ class HistoryManagerTest {
         Assertions.assertNotNull(tasksManager.getHistory(), "История пустая и не инициализирована");
     }
 
-    @DisplayName("Проверка удаления таски из истории вызовов при вызове этой же таски")
+    @DisplayName("Проверка добавления одной и той же таски в историю")
     @Test
-    void removeTaskFromCallHistoryWhenItIsAlreadyInIt() {
-        Task task2 = new Task("Изучить интеллектуальное право", "Раздел 'авторские права'");
+    void shouldHistorySize2WhenAddTheSameTaskToTheHistory() {
         tasksManager.createTask(task);
         tasksManager.createTask(task2);
         tasksManager.getTaskByID(1);
+        tasksManager.getTaskByID(2);
+        tasksManager.getTaskByID(1);
+        List<Task> taskList = tasksManager.getHistory();
+        Assertions.assertEquals(2, taskList.size(), "Размер истории не совпадает с нужным значением");
+
+    }
+
+    @DisplayName("Проверка удаления таски из истории вызовов при вызове этой же таски")
+    @Test
+    void removeTaskFromCallHistoryWhenItIsAlreadyInIt() {
+        tasksManager.createTask(task);
+        tasksManager.createTask(task2);
+        tasksManager.getTaskByID(1);
+        tasksManager.getTaskByID(2);
+        tasksManager.getTaskByID(1);
+        List<Task> taskList = tasksManager.getHistory();
+        Task testTask = taskList.get(0);
+        Assertions.assertEquals(task.toString(), testTask.toString());
     }
 
     @DisplayName("Проверка получения истории вызовов тасок")
@@ -37,6 +56,17 @@ class HistoryManagerTest {
         tasksManager.getTaskByID(1);
         tasksManager.getTaskByID(1);
         List<Task> taskList = tasksManager.getHistory();
-         Assertions.assertEquals(2, taskList.size(), "Размер истории не совпадает с нужным значением");
+        Assertions.assertEquals(2, taskList.size(), "Размер истории не совпадает с нужным значением");
+    }
+
+    @DisplayName("1. Проверка получения пустой истории вызовов тасок." +
+            "2. проверка невозможности удаления таски из пустой истории вызовов")
+    @Test
+    void shouldThrowsNullPointerEXPWhenGetHistoryCalled() {
+        tasksManager.createTask(task);
+        tasksManager.createTask(task2);
+        NullPointerException exception = Assertions.assertThrows(NullPointerException.class, tasksManager::getHistory,
+                "история вызовов не пустая");
+        Assertions.assertNull(exception.getMessage());
     }
 }
