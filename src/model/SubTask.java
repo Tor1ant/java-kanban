@@ -1,14 +1,15 @@
 package model;
 
 import service.Status;
+
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class SubTask extends Task {
-
     private int epicId;
 
-    public SubTask(String title, String description, Status status, int epicId) {
-        super(title, description, status);
+    public SubTask(String title, String description, Status status, int epicId, long duration, LocalDateTime startTime) {
+        super(title, description, status, duration, startTime);
         this.epicId = epicId;
     }
 

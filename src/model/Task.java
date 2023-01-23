@@ -2,16 +2,22 @@ package model;
 
 import service.Status;
 
+import java.time.LocalDateTime;
+
 public class Task {
     protected String title;
     protected String description;
     protected int id;
     protected Status status;
+    protected long duration;
+    protected LocalDateTime startTime;
 
-    public Task(String title, String description, Status status) {
+    public Task(String title, String description, Status status, long duration, LocalDateTime startTime) {
         this.title = title;
         this.description = description;
         this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public Task(String title, String description) {
@@ -49,6 +55,26 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plusMinutes(duration);
     }
 
     @Override

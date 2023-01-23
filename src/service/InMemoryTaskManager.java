@@ -4,6 +4,7 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,13 +47,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
-            epics.put(epic.getId(), epic);
+        epics.put(epic.getId(), epic);
     }
 
     @Override
     public void updateSubTask(SubTask subTask) {
-            subTasks.put(subTask.getId(), subTask);
-            changeEpicProgress(subTask.getEpicId());
+        subTasks.put(subTask.getId(), subTask);
+        changeEpicProgress(subTask.getEpicId());
     }
 
     @Override
@@ -74,7 +75,6 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeAllTasks() {
         tasks.keySet().forEach(historyManager::remove);
         tasks.clear();
-
     }
 
     @Override
@@ -165,17 +165,43 @@ public class InMemoryTaskManager implements TaskManager {
         }
         if (countOfProgressNew == subTaskArrayList.size()) {
             epics.get(epicID).setProgress(Status.NEW);
+            changeEpicDuration(epicID, subTaskArrayList);
             return;
         }
         if (countOfProgressDone == subTaskArrayList.size()) {
             epics.get(epicID).setProgress(Status.DONE);
+            changeEpicDuration(epicID, subTaskArrayList);
         } else {
             epics.get(epicID).setProgress(Status.IN_PROGRESS);
+            changeEpicDuration(epicID, subTaskArrayList);
         }
+    }
+
+    private void changeEpicDuration(int epicID, List<SubTask> epicSubTasks) {
+        long duration = 0;
+        LocalDateTime MIN_TIME = LocalDateTime.MAX;
+        LocalDateTime MAX_TIME = LocalDateTime.MIN;
+        for (SubTask epicSubTask : epicSubTasks) {
+            duration += epicSubTask.getDuration();
+            if (MIN_TIME.isAfter(epicSubTask.getStartTime())) {
+                MIN_TIME = epicSubTask.getStartTime();
+            }
+            if (MAX_TIME.isBefore(epicSubTask.getEndTime())) {
+                MAX_TIME = epicSubTask.getEndTime();
+            }
+        }
+        epics.get(epicID).setStartTime(MIN_TIME);
+        epics.get(epicID).setEndTime(MAX_TIME);
+        epics.get(epicID).setDuration(duration);
     }
 
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
+
+    protected void setId(int id) {
+        this.id = id;
+    }
 }
+

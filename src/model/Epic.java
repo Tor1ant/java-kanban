@@ -2,6 +2,7 @@ package model;
 
 import service.Status;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -9,11 +10,13 @@ public class Epic extends Task {
 
     private final ArrayList<Integer> subTasksId = new ArrayList<>();
 
+    private LocalDateTime endTime;
 
     public Epic(String title, String description) {
         super(title, description);
-        status = Status.NEW;
+        super.status = Status.NEW;
     }
+
 
     public ArrayList<Integer> getSubTasksId() {
         return subTasksId;
@@ -29,6 +32,15 @@ public class Epic extends Task {
 
     public void clearSubTasksId() {
         subTasksId.clear();
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return this.endTime;
     }
 
     @Override

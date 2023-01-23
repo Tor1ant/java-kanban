@@ -1,4 +1,6 @@
-id,type,name,status,description,epic
-1,EPIC,Сходить в магазин,NEW,на это есть пол часа
-2,SUBTASK,Выкинуть мусор,NEW,перед магазином,1
+id,type,name,status,description,epic(forSubTask),duration,startTime,endTime(forEpic)
+1,TASK,fsfsadfds,NEW,fdfs,60,2023-01-23T23:49:02.552249800
+2,EPIC,ddasdsada,NEW,dfsfds,180,2023-01-23T23:49:02.552249800,2023-01-24T01:49:02.552249800
+3,SUBTASK,сабтаска,NEW,новая,2,60,2023-01-23T23:49:02.552249800
+4,SUBTASK,сабтаска,NEW,новая,2,120,2023-01-23T23:49:02.552249800
 
