@@ -5,15 +5,22 @@ import model.SubTask;
 import model.Task;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Task> tasks = new HashMap<>();
     protected final HashMap<Integer, Epic> epics = new HashMap<>();
     protected final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
+
+    protected final TreeSet<Task> prioritizedTasks = new TreeSet<>((o1, o2) -> {
+        if (o2.getStartTime() == null || o1.getStartTime() == null) {
+
+            return 1;
+        }
+        return o1.getStartTime().compareTo(o2.getStartTime());
+    });
     private int id = 0;
 
     @Override
@@ -21,6 +28,7 @@ public class InMemoryTaskManager implements TaskManager {
         id++;
         task.setId(id);
         tasks.put(id, task);
+        prioritizedTasks.add(task);
     }
 
     @Override
@@ -29,6 +37,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setId(id);
         epics.put(id, epic);
         changeEpicProgress(epic.getId());
+        prioritizedTasks.add(epic);
     }
 
     @Override
@@ -38,21 +47,29 @@ public class InMemoryTaskManager implements TaskManager {
         epics.get(subTask.getEpicId()).addSubTasksId(subTask.getId());
         subTasks.put(subTask.getId(), subTask);
         changeEpicProgress(subTask.getEpicId());
+        prioritizedTasks.add(subTask);
     }
 
     @Override
     public void updateTask(Task task) {
+        prioritizedTasks.remove(tasks.get(task.getId()));
         tasks.put(task.getId(), task);
+        prioritizedTasks.add(task);
+
     }
 
     @Override
     public void updateEpic(Epic epic) {
+        prioritizedTasks.remove(tasks.get(epic.getId()));
         epics.put(epic.getId(), epic);
+        prioritizedTasks.add(epic);
     }
 
     @Override
     public void updateSubTask(SubTask subTask) {
+        prioritizedTasks.remove(tasks.get(subTask.getId()));
         subTasks.put(subTask.getId(), subTask);
+        prioritizedTasks.add(subTask);
         changeEpicProgress(subTask.getEpicId());
     }
 
@@ -74,12 +91,15 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeAllTasks() {
         tasks.keySet().forEach(historyManager::remove);
+        prioritizedTasks.removeIf(tasks::containsValue);
         tasks.clear();
     }
 
     @Override
     public void removeAllEpics() {
         epics.keySet().forEach(historyManager::remove);
+        prioritizedTasks.removeIf(epics::containsValue);
+        prioritizedTasks.removeIf(subTasks::containsValue);
         epics.clear();
         subTasks.clear();
     }
@@ -87,6 +107,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeAllSubTasks() {
         subTasks.keySet().forEach(historyManager::remove);
+        prioritizedTasks.removeIf(subTasks::containsValue);
         subTasks.clear();
         for (Epic epic : epics.values()) {
             epic.clearSubTasksId();
@@ -114,16 +135,20 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeTaskById(int id) {
+        prioritizedTasks.remove(tasks.get(id));
         tasks.remove(id);
         historyManager.remove(id);
     }
 
     @Override
     public void removeEpicById(int id) {
+
         for (Integer subtaskId : epics.get(id).getSubTasksId()) {
+            prioritizedTasks.remove(subTasks.get(subtaskId));
             subTasks.remove(subtaskId);
             historyManager.remove(subtaskId);
         }
+        prioritizedTasks.remove(epics.get(id));
         epics.remove(id);
         historyManager.remove(id);
     }
@@ -132,6 +157,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeSubTaskById(int id) {
         int epicId = subTasks.get(id).getEpicId();
         epics.get(epicId).removeSubTask(id);
+        prioritizedTasks.remove(subTasks.get(id));
         subTasks.remove(id);
         changeEpicProgress(epicId);
         historyManager.remove(id);
@@ -198,6 +224,23 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    @Override
+    public TreeSet<Task> getPrioritizedTasks() {
+/*        ArrayList<Task> arrayList = new ArrayList<>();
+        TreeSet treeSet = new TreeSet<Task>((o1, o2) -> {
+            if (o2.getStartTime() == null || o1.getStartTime() == null) {
+
+                return 1;
+            }
+            return o1.getStartTime().compareTo(o2.getStartTime());
+        });
+        arrayList.addAll(tasks.values());
+        arrayList.addAll(epics.values());
+        arrayList.addAll(subTasks.values());
+        treeSet.addAll(arrayList);*/
+        return prioritizedTasks;
     }
 
     protected void setId(int id) {

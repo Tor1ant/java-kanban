@@ -7,8 +7,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -20,9 +23,10 @@ class TaskManagerTest {
 
     @BeforeEach
     public void createTasks() {
-        task = new Task("Выгулять собаку", "ПЛАТНО", Status.NEW);
+        task = new Task("Выгулять собаку", "ПЛАТНО", Status.NEW, 60, LocalDateTime.now());
         epic = new Epic("Сходить в магазин", "на это есть пол часа");
-        subTask = new SubTask("Выкинуть мусор", "перед магазином", Status.NEW, 1);
+        subTask = new SubTask("Выкинуть мусор", "перед магазином", Status.NEW, 1, 120,
+                LocalDateTime.now().plusMinutes(30));
     }
 
     @Test
@@ -107,7 +111,8 @@ class TaskManagerTest {
         taskManager.createEpic(epic);
         taskManager.addSubTask(subTask);
         Assertions.assertEquals(1, subTask.getEpicId());
-        SubTask subTask1 = new SubTask("новый заголовок", "...", Status.NEW, 1);
+        SubTask subTask1 = new SubTask("новый заголовок", "...", Status.NEW, 1, 60,
+                LocalDateTime.now());
         subTask1.setId(2);
         taskManager.updateSubTask(subTask1);
         Assertions.assertEquals("новый заголовок", taskManager.getSubTaskById(2).getTitle());
@@ -293,7 +298,7 @@ class TaskManagerTest {
     }
 
     @Test
-    void getHistory() {
+    void ShouldReturnTaskListSize3WhenCallGetHistory() {
         taskManager.createEpic(epic);
         taskManager.createTask(task);
         taskManager.addSubTask(subTask);
@@ -302,5 +307,22 @@ class TaskManagerTest {
         taskManager.getSubTaskById(3);
         List<Task> taskList = taskManager.getHistory();
         Assertions.assertEquals(3, taskList.size(), "История пустая");
+    }
+
+    @Test
+    void getPrioritizedTasks() {
+        taskManager.createEpic(epic);
+        taskManager.createTask(task);
+        taskManager.addSubTask(subTask);
+        taskManager.createTask(new Task("ТЕСТ", "TEST", Status.NEW, 30, LocalDateTime.now()));
+        taskManager.addSubTask(new SubTask("SUBTASKTEST", "TESTING", Status.NEW, subTask.getEpicId(),
+                60, LocalDateTime.now().plusMinutes(20)));
+        taskManager.createEpic(new Epic("TESTEPIC","..."));
+        TreeSet<Task> treeset = taskManager.getPrioritizedTasks();
+        System.out.println(treeset);
+        FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(new File(
+                "SaveData.csv"));
+        TreeSet<Task> treesetafterESC = fileBackedTasksManager.getPrioritizedTasks();
+        System.out.println(treesetafterESC);
     }
 }

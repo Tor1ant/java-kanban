@@ -179,8 +179,18 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     String title = tasksInString[2];
                     String description = tasksInString[4];
                     long duration = Long.parseLong(tasksInString[5]);
-                    LocalDateTime startTime = LocalDateTime.parse(tasksInString[6]);
-                    LocalDateTime endTime = LocalDateTime.parse(tasksInString[7]);
+                    LocalDateTime startTime;
+                    LocalDateTime endTime;
+                    if (tasksInString[6].equals("null")) {
+                        startTime = null;
+                    } else {
+                        startTime = LocalDateTime.parse(tasksInString[6]);
+                    }
+                    if (tasksInString[7].equals("null")) {
+                        endTime = null;
+                    } else {
+                        endTime = LocalDateTime.parse(tasksInString[7]);
+                    }
                     epic = new Epic(title, description);
                     epic.setId(id);
                     epic.setDuration(duration);
@@ -272,6 +282,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        fileBackedTasksManager.prioritizedTasks.addAll(taskList);
         return fileBackedTasksManager;
     }
 }

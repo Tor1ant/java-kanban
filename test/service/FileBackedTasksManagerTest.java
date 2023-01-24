@@ -6,6 +6,7 @@ import model.Task;
 import org.junit.jupiter.api.*;
 
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FileBackedTasksManagerTest {
@@ -13,13 +14,18 @@ public class FileBackedTasksManagerTest {
 
     @BeforeEach
     void createTasksEpicsSubtasksAndCallThem() {
-        Task task1 = new Task("Погулять с собакой", "в 5 утра", Status.NEW);
-        Task task2 = new Task("изучить ФЗ #115 о Банкротстве физических лиц", "К понедельнику", Status.NEW);
+        Task task1 = new Task("Погулять с собакой", "в 5 утра", Status.NEW, 60,
+                LocalDateTime.now());
+        Task task2 = new Task("изучить ФЗ #115 о Банкротстве физических лиц", "К понедельнику",
+                Status.NEW, 60, LocalDateTime.now());
         Epic epicWithoutSubTasks = new Epic("Сделать ремонт в квартире", "Давно пора");
         Epic epicWithSubTasks = new Epic("Сходить в магазин", "Купить продукты");
-        SubTask subtask1 = new SubTask("Купить молоко", "Зайти за молоком в пятерочку", Status.NEW, 4);
-        SubTask subtask2 = new SubTask("Купить сахар", "это не обязательно", Status.NEW, 4);
-        SubTask subTask3 = new SubTask("Купить вазелин", "Допустим", Status.NEW, 4);
+        SubTask subtask1 = new SubTask("Купить молоко", "Зайти за молоком в пятерочку", Status.NEW,
+                4, 60, LocalDateTime.now());
+        SubTask subtask2 = new SubTask("Купить сахар", "это не обязательно", Status.NEW, 4,
+                60, LocalDateTime.now());
+        SubTask subTask3 = new SubTask("Купить вазелин", "Допустим", Status.NEW, 4,
+                60, LocalDateTime.now());
         taskManager.createTask(task1);
         taskManager.createTask(task2);
         taskManager.createEpic(epicWithoutSubTasks);
@@ -68,7 +74,7 @@ public class FileBackedTasksManagerTest {
         taskManager.removeAllTasks();
         taskManager.removeAllEpics();
         taskManager.removeAllSubTasks();
-        Task task = new Task("Встретить новый год", "...", Status.NEW);
+        Task task = new Task("Встретить новый год", "...", Status.NEW,60, LocalDateTime.now());
         taskManager.createTask(task);
         TaskManager taskManagerAfterESC = FileBackedTasksManager.loadFromFile(Paths.get("SaveData.csv").toFile());
         NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class,
