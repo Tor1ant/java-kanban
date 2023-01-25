@@ -282,7 +282,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        fileBackedTasksManager.prioritizedTasks.addAll(taskList);
+        fileBackedTasksManager.prioritizedTasks.addAll(fileBackedTasksManager.tasks.values());
+        fileBackedTasksManager.prioritizedTasks.addAll(fileBackedTasksManager.subTasks.values());
         return fileBackedTasksManager;
     }
 }

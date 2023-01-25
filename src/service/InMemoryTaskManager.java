@@ -15,11 +15,15 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
     protected final TreeSet<Task> prioritizedTasks = new TreeSet<>((o1, o2) -> {
-        if (o2.getStartTime() == null || o1.getStartTime() == null) {
-
+        if (o1.getStartTime() == null) {
             return 1;
+        } else if (o2.getStartTime() == null) {
+            return -1;
+        } else if (o1.getStartTime().isEqual(o2.getStartTime())) {
+            return o1.getTitle().compareTo(o2.getTitle());
+        } else {
+            return o1.getStartTime().compareTo(o2.getStartTime());
         }
-        return o1.getStartTime().compareTo(o2.getStartTime());
     });
     private int id = 0;
 
@@ -37,7 +41,6 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setId(id);
         epics.put(id, epic);
         changeEpicProgress(epic.getId());
-        prioritizedTasks.add(epic);
     }
 
     @Override
@@ -62,7 +65,6 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateEpic(Epic epic) {
         prioritizedTasks.remove(tasks.get(epic.getId()));
         epics.put(epic.getId(), epic);
-        prioritizedTasks.add(epic);
     }
 
     @Override
@@ -98,7 +100,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeAllEpics() {
         epics.keySet().forEach(historyManager::remove);
-        prioritizedTasks.removeIf(epics::containsValue);
         prioritizedTasks.removeIf(subTasks::containsValue);
         epics.clear();
         subTasks.clear();
@@ -148,7 +149,6 @@ public class InMemoryTaskManager implements TaskManager {
             subTasks.remove(subtaskId);
             historyManager.remove(subtaskId);
         }
-        prioritizedTasks.remove(epics.get(id));
         epics.remove(id);
         historyManager.remove(id);
     }
@@ -228,18 +228,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public TreeSet<Task> getPrioritizedTasks() {
-/*        ArrayList<Task> arrayList = new ArrayList<>();
-        TreeSet treeSet = new TreeSet<Task>((o1, o2) -> {
-            if (o2.getStartTime() == null || o1.getStartTime() == null) {
-
-                return 1;
-            }
-            return o1.getStartTime().compareTo(o2.getStartTime());
-        });
-        arrayList.addAll(tasks.values());
-        arrayList.addAll(epics.values());
-        arrayList.addAll(subTasks.values());
-        treeSet.addAll(arrayList);*/
         return prioritizedTasks;
     }
 
