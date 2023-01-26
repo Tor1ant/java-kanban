@@ -5,7 +5,6 @@ public class ManagerSaveException extends RuntimeException {
         super(message);
     }
 
-
     @Override
     public void printStackTrace() {
         super.printStackTrace();

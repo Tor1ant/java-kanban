@@ -17,15 +17,15 @@ public class FileBackedTasksManagerTest {
         Task task1 = new Task("Погулять с собакой", "в 5 утра", Status.NEW, 60,
                 LocalDateTime.now());
         Task task2 = new Task("изучить ФЗ #115 о Банкротстве физических лиц", "К понедельнику",
-                Status.NEW, 60, LocalDateTime.now());
+                Status.NEW, 60, LocalDateTime.now().minusMinutes(300));
         Epic epicWithoutSubTasks = new Epic("Сделать ремонт в квартире", "Давно пора");
         Epic epicWithSubTasks = new Epic("Сходить в магазин", "Купить продукты");
         SubTask subtask1 = new SubTask("Купить молоко", "Зайти за молоком в пятерочку", Status.NEW,
-                4, 60, LocalDateTime.now());
+                4, 20, LocalDateTime.now().plusMinutes(500));
         SubTask subtask2 = new SubTask("Купить сахар", "это не обязательно", Status.NEW, 4,
-                60, LocalDateTime.now());
+                60, LocalDateTime.now().plusMinutes(350));
         SubTask subTask3 = new SubTask("Купить вазелин", "Допустим", Status.NEW, 4,
-                60, LocalDateTime.now());
+                5, LocalDateTime.now().plusMinutes(450));
         taskManager.createTask(task1);
         taskManager.createTask(task2);
         taskManager.createEpic(epicWithoutSubTasks);
@@ -74,7 +74,7 @@ public class FileBackedTasksManagerTest {
         taskManager.removeAllTasks();
         taskManager.removeAllEpics();
         taskManager.removeAllSubTasks();
-        Task task = new Task("Встретить новый год", "...", Status.NEW,60, LocalDateTime.now());
+        Task task = new Task("Встретить новый год", "...", Status.NEW, 60, LocalDateTime.now());
         taskManager.createTask(task);
         TaskManager taskManagerAfterESC = FileBackedTasksManager.loadFromFile(Paths.get("SaveData.csv").toFile());
         NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class,

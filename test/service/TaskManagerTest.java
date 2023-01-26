@@ -26,7 +26,7 @@ class TaskManagerTest {
         task = new Task("Выгулять собаку", "ПЛАТНО", Status.NEW, 60, LocalDateTime.now());
         epic = new Epic("Сходить в магазин", "на это есть пол часа");
         subTask = new SubTask("Выкинуть мусор", "перед магазином", Status.NEW, 1, 120,
-                LocalDateTime.now().plusMinutes(30));
+                LocalDateTime.now().plusMinutes(90));
     }
 
     @Test
@@ -298,7 +298,7 @@ class TaskManagerTest {
     }
 
     @Test
-    void ShouldReturnTaskListSize3WhenCallGetHistory() {
+    void shouldReturnTaskListSize3WhenCallGetHistory() {
         taskManager.createEpic(epic);
         taskManager.createTask(task);
         taskManager.addSubTask(subTask);
@@ -310,19 +310,51 @@ class TaskManagerTest {
     }
 
     @Test
-    void getPrioritizedTasks() {
+    void shouldReturnEqualsWhenGetPrioritizedTasks() {
         taskManager.createEpic(epic);
         taskManager.createTask(task);
         taskManager.addSubTask(subTask);
-        taskManager.createTask(new Task("ТЕСТ", "TEST", Status.NEW, 30, LocalDateTime.now()));
+        taskManager.createTask(new Task("ТЕСТ", "TEST", Status.NEW, 30, LocalDateTime.now().
+                plusMinutes(250)));
         taskManager.addSubTask(new SubTask("SUBTASKTEST", "TESTING", Status.NEW, subTask.getEpicId(),
-                60, LocalDateTime.now().plusMinutes(20)));
-        taskManager.createEpic(new Epic("TESTEPIC","..."));
+                60, LocalDateTime.now().plusMinutes(300)));
+        taskManager.createEpic(new Epic("TESTEPIC", "..."));
         TreeSet<Task> treeset = taskManager.getPrioritizedTasks();
-        System.out.println(treeset);
         FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(new File(
                 "SaveData.csv"));
         TreeSet<Task> treesetafterESC = fileBackedTasksManager.getPrioritizedTasks();
-        System.out.println(treesetafterESC);
+        Assertions.assertArrayEquals(treeset.toArray(), treesetafterESC.toArray());
+    }
+
+    @Test
+    void shouldTrueWhenGetPrioritizedTasksIsEmpty() {
+        TreeSet<Task> treeset = taskManager.getPrioritizedTasks();
+        taskManager.createEpic(epic);
+        taskManager.createTask(task);
+        taskManager.addSubTask(subTask);
+        taskManager.createTask(new Task("ТЕСТ", "TEST", Status.NEW, 30, LocalDateTime.now().
+                plusMinutes(250)));
+        taskManager.addSubTask(new SubTask("SUBTASKTEST", "TESTING", Status.NEW, subTask.getEpicId(),
+                60, LocalDateTime.now().plusMinutes(300)));
+        taskManager.createEpic(new Epic("TESTEPIC", "..."));
+        taskManager.removeSubTaskById(3);
+        taskManager.removeSubTaskById(5);
+        taskManager.removeEpicById(1);
+        taskManager.removeTaskById(2);
+        taskManager.removeTaskById(4);
+        taskManager.removeEpicById(6);
+        Assertions.assertTrue(treeset.isEmpty());
+    }
+
+    @Test
+    void shouldThrowValidateExceptionWhenAddTaskInTimeAnotherTask() {
+        taskManager.createEpic(epic);
+        taskManager.createTask(task);
+        taskManager.addSubTask(subTask);
+        Task newTask = new Task("ТЕСТ", "TEST", Status.NEW, 30, task.getStartTime());
+        ValidateException validateException = Assertions.assertThrows(ValidateException.class, () -> taskManager.
+                createTask(newTask));
+        Assertions.assertEquals(ValidateException.class, validateException.getClass());
+
     }
 }

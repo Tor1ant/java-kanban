@@ -9,7 +9,7 @@ public class Task {
     protected String description;
     protected int id;
     protected Status status;
-    protected long duration;
+    protected Long duration;
     protected LocalDateTime startTime;
 
     public Task(String title, String description, Status status, long duration, LocalDateTime startTime) {
@@ -57,11 +57,11 @@ public class Task {
         this.id = id;
     }
 
-    public long getDuration() {
+    public Long getDuration() {
         return duration;
     }
 
-    public void setDuration(long duration) {
+    public void setDuration(Long duration) {
         this.duration = duration;
     }
 
@@ -77,7 +77,7 @@ public class Task {
         return startTime.plusMinutes(duration);
     }
 
-   @Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

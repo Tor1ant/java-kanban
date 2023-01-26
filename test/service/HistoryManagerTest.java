@@ -5,12 +5,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 class HistoryManagerTest {
-    Task task = new Task("Выйти на улицу", "в 20:00");
-    Task task2 = new Task("Изучить интеллектуальное право", "Раздел 'авторские права'");
-    Task task3 = new Task("Выучить Английский язык", "до 2025 года");
+    Task task = new Task("Выйти на улицу", "в 20:00", Status.NEW, 30, LocalDateTime.now());
+    Task task2 = new Task("Изучить интеллектуальное право", "Раздел 'авторские права'", Status.NEW,
+            20, LocalDateTime.now().plusMinutes(45));
+    Task task3 = new Task("Выучить Английский язык", "до 2025 года", Status.NEW, 60,
+            LocalDateTime.now().plusMinutes(90));
     FileBackedTasksManager tasksManager = new FileBackedTasksManager();
 
     @DisplayName("Проверка добавления таски в историю вызовов")
@@ -32,6 +35,7 @@ class HistoryManagerTest {
         tasksManager.getTaskByID(1);
         List<Task> taskList = tasksManager.getHistory();
         Assertions.assertEquals(2, taskList.size(), "Размер истории не совпадает с нужным значением");
+        Assertions.assertEquals("Выйти на улицу", taskList.get(0).getTitle());
     }
 
     @DisplayName("Проверка удаления таски из истории вызовов при вызове этой же таски")

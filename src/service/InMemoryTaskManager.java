@@ -11,7 +11,6 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Task> tasks = new HashMap<>();
     protected final HashMap<Integer, Epic> epics = new HashMap<>();
     protected final HashMap<Integer, SubTask> subTasks = new HashMap<>();
-
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
     protected final TreeSet<Task> prioritizedTasks = new TreeSet<>((o1, o2) -> {
@@ -29,10 +28,16 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createTask(Task task) {
-        id++;
-        task.setId(id);
-        tasks.put(id, task);
-        prioritizedTasks.add(task);
+        Task validationTask = validation(task);
+        if (validationTask == null) {
+            id++;
+            task.setId(id);
+            tasks.put(id, task);
+            prioritizedTasks.add(task);
+        } else {
+            throw new ValidateException("Задача " + task.getTitle() + " пересекается по времени с задачей " +
+                    validationTask.getTitle());
+        }
     }
 
     @Override
@@ -45,34 +50,50 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addSubTask(SubTask subTask) {
-        id++;
-        subTask.setId(id);
-        epics.get(subTask.getEpicId()).addSubTasksId(subTask.getId());
-        subTasks.put(subTask.getId(), subTask);
-        changeEpicProgress(subTask.getEpicId());
-        prioritizedTasks.add(subTask);
+        Task validationTask = validation(subTask);
+        if (validationTask == null) {
+            id++;
+            subTask.setId(id);
+            epics.get(subTask.getEpicId()).addSubTasksId(subTask.getId());
+            subTasks.put(subTask.getId(), subTask);
+            changeEpicProgress(subTask.getEpicId());
+            prioritizedTasks.add(subTask);
+        } else {
+            throw new ValidateException("Задача " + subTask.getTitle() + " пересекается по времени с задачей " +
+                    validationTask.getTitle());
+        }
     }
 
     @Override
     public void updateTask(Task task) {
-        prioritizedTasks.remove(tasks.get(task.getId()));
-        tasks.put(task.getId(), task);
-        prioritizedTasks.add(task);
-
+        Task validationTask = validation(task);
+        if (validationTask == null) {
+            prioritizedTasks.remove(tasks.get(task.getId()));
+            tasks.put(task.getId(), task);
+            prioritizedTasks.add(task);
+        } else {
+            throw new ValidateException("Задача " + task.getTitle() + " пересекается по времени с задачей " +
+                    validationTask.getTitle());
+        }
     }
 
     @Override
     public void updateEpic(Epic epic) {
-        prioritizedTasks.remove(tasks.get(epic.getId()));
         epics.put(epic.getId(), epic);
     }
 
     @Override
     public void updateSubTask(SubTask subTask) {
-        prioritizedTasks.remove(tasks.get(subTask.getId()));
-        subTasks.put(subTask.getId(), subTask);
-        prioritizedTasks.add(subTask);
-        changeEpicProgress(subTask.getEpicId());
+        Task validationTask = validation(subTask);
+        if (validationTask == null) {
+            prioritizedTasks.remove(subTasks.get(subTask.getId()));
+            subTasks.put(subTask.getId(), subTask);
+            prioritizedTasks.add(subTask);
+            changeEpicProgress(subTask.getEpicId());
+        } else {
+            throw new ValidateException("Задача " + subTask.getTitle() + " пересекается по времени с задачей " +
+                    validationTask.getTitle());
+        }
     }
 
     @Override
@@ -143,7 +164,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeEpicById(int id) {
-
         for (Integer subtaskId : epics.get(id).getSubTasksId()) {
             prioritizedTasks.remove(subTasks.get(subtaskId));
             subTasks.remove(subtaskId);
@@ -180,6 +200,7 @@ public class InMemoryTaskManager implements TaskManager {
         int countOfProgressDone = 0;
         if (epics.get(epicID).getSubTasksId().isEmpty()) {
             epics.get(epicID).setProgress(Status.NEW);
+            changeEpicDuration(epicID, subTaskArrayList);
             return;
         }
         for (SubTask subTask : subTaskArrayList) {
@@ -207,6 +228,12 @@ public class InMemoryTaskManager implements TaskManager {
         long duration = 0;
         LocalDateTime MIN_TIME = LocalDateTime.MAX;
         LocalDateTime MAX_TIME = LocalDateTime.MIN;
+        if (epicSubTasks.isEmpty()) {
+            epics.get(epicID).setStartTime(null);
+            epics.get(epicID).setEndTime(null);
+            epics.get(epicID).setDuration(null);
+            return;
+        }
         for (SubTask epicSubTask : epicSubTasks) {
             duration += epicSubTask.getDuration();
             if (MIN_TIME.isAfter(epicSubTask.getStartTime())) {
@@ -234,5 +261,35 @@ public class InMemoryTaskManager implements TaskManager {
     protected void setId(int id) {
         this.id = id;
     }
-}
 
+    private Task validation(Task task) {
+        boolean startTimeIsNull = prioritizedTasks.stream().anyMatch(task1 -> task1.getStartTime() != null &&
+                task.getStartTime() != null);
+        boolean startTimeOrEndTimeIsEqualWitchTaskFromTreeSet = false;
+
+        for (Task prioritizedTask : prioritizedTasks) {
+            if (task.getId() == prioritizedTask.getId()) {
+                return null;
+            }
+            if (task.getStartTime() != null && task.getEndTime() != null) {
+                if (task.getEndTime().isBefore(prioritizedTask.getStartTime())) {
+                    startTimeOrEndTimeIsEqualWitchTaskFromTreeSet = true;
+                } else if (task.getStartTime().isAfter(prioritizedTask.getEndTime())) {
+                    startTimeOrEndTimeIsEqualWitchTaskFromTreeSet = true;
+                } else if (task.getStartTime().isEqual(prioritizedTask.getStartTime())) {
+                    return prioritizedTask;
+                } else if (task.getEndTime().isEqual(prioritizedTask.getEndTime())) {
+                    return prioritizedTask;
+                } else {
+                    return prioritizedTask;
+                }
+            } else {
+                startTimeOrEndTimeIsEqualWitchTaskFromTreeSet = true;
+            }
+        }
+        if (startTimeIsNull && startTimeOrEndTimeIsEqualWitchTaskFromTreeSet) {
+            return null;
+        } else
+            return null;
+    }
+}

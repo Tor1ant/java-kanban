@@ -178,7 +178,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     int id = Integer.parseInt(tasksInString[0]);
                     String title = tasksInString[2];
                     String description = tasksInString[4];
-                    long duration = Long.parseLong(tasksInString[5]);
+                    Long duration;
+                    try {
+                        duration = Long.parseLong(tasksInString[5]);
+                    } catch (NumberFormatException e) {
+                        duration = null;
+                    }
                     LocalDateTime startTime;
                     LocalDateTime endTime;
                     if (tasksInString[6].equals("null")) {
