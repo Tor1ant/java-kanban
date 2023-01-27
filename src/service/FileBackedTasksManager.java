@@ -38,7 +38,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             fileWriter.write("\n");
             fileWriter.write(historyInString);
         } catch (IOException e) {
-            throw new ManagerSaveException("Данные не сохранены");
+            throw new ManagerSaveException("Данные не сохранены", e.getCause());
         }
     }
 
@@ -139,17 +139,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         StringBuilder taskToCSV = new StringBuilder();
         if (task instanceof SubTask) {
             taskToCSV.append(task.getId()).append(",").append(TaskType.SUBTASK).append(",").append(task.getTitle()).
-                    append(",").append(task.getProgress()).append(",").append(task.getDescription()).append(",").
+                    append(",").append(task.getStatus()).append(",").append(task.getDescription()).append(",").
                     append(((SubTask) task).getEpicId()).append(",").append(task.getDuration()).append(",").append(task.
                             getStartTime());
         } else if (task instanceof Epic) {
             taskToCSV.append(task.getId()).append(",").append(TaskType.EPIC).append(",").append(task.getTitle()).
-                    append(",").append(task.getProgress()).append(",").append(task.getDescription()).append(",").
+                    append(",").append(task.getStatus()).append(",").append(task.getDescription()).append(",").
                     append(task.getDuration()).append(",").append(task.getStartTime()).append(",").append(task.
                             getEndTime());
         } else if (task != null) {
             taskToCSV.append(task.getId()).append(",").append(TaskType.TASK).append(",").append(task.getTitle()).
-                    append(",").append(task.getProgress()).append(",").append(task.getDescription()).append(",").
+                    append(",").append(task.getStatus()).append(",").append(task.getDescription()).append(",").
                     append(task.getDuration()).append(",").append(task.getStartTime());
         }
         return taskToCSV.toString();

@@ -41,11 +41,11 @@ public class Task {
         this.description = description;
     }
 
-    public Status getProgress() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setProgress(Status progress) {
+    public void setStatus(Status progress) {
         this.status = progress;
     }
 

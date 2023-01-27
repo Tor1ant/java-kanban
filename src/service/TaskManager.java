@@ -46,8 +46,6 @@ public interface TaskManager {
 
     ArrayList<SubTask> getListOfEpicsSubTasks(int epicId);
 
-    void changeEpicProgress(int epicID);
-
     List<Task> getHistory();
 
     TreeSet<Task> getPrioritizedTasks();

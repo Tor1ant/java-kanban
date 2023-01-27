@@ -45,7 +45,7 @@ class TaskManagerTest {
     @Test
     void shouldTaskManagerEpicsReturnSize1WhenCreateEpic() {
         taskManager.createEpic(epic);
-        Assertions.assertEquals("NEW", epic.getProgress().toString());
+        Assertions.assertEquals("NEW", epic.getStatus().toString());
         Assertions.assertEquals(1, taskManager.getAllEpics().size());
         Assertions.assertFalse(taskManager.getAllEpics().isEmpty());
         NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class,
@@ -58,7 +58,7 @@ class TaskManagerTest {
         taskManager.createEpic(epic);
         taskManager.addSubTask(subTask);
         subTask.setEpicId(1);
-        Assertions.assertEquals("NEW", epic.getProgress().toString());
+        Assertions.assertEquals("NEW", epic.getStatus().toString());
         Assertions.assertEquals(1, subTask.getEpicId());
         Assertions.assertEquals(1, taskManager.getAllSubTasks().size());
         NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class,
@@ -92,7 +92,7 @@ class TaskManagerTest {
         Epic epic1 = new Epic("новый заголовок", "обновление эпика");
         epic1.setId(1);
         taskManager.updateEpic(epic1);
-        Assertions.assertEquals("NEW", epic.getProgress().toString());
+        Assertions.assertEquals("NEW", epic.getStatus().toString());
         Assertions.assertEquals("новый заголовок", taskManager.getEpicByID(1).getTitle());
     }
 
@@ -144,7 +144,7 @@ class TaskManagerTest {
     @Test
     void ShouldReturn1WhenGetAllEpics() {
         taskManager.createEpic(epic);
-        Assertions.assertEquals("NEW", epic.getProgress().toString());
+        Assertions.assertEquals("NEW", epic.getStatus().toString());
         Assertions.assertEquals(1, taskManager.getAllEpics().size());
     }
 
@@ -190,7 +190,7 @@ class TaskManagerTest {
     @Test
     void shouldReturnTrueWhenRemoveAllEpics() {
         taskManager.createEpic(epic);
-        Assertions.assertEquals("NEW", epic.getProgress().toString());
+        Assertions.assertEquals("NEW", epic.getStatus().toString());
         boolean isEmpty = taskManager.getAllEpics().isEmpty();
         Assertions.assertFalse(isEmpty);
         taskManager.removeAllEpics();
@@ -238,7 +238,7 @@ class TaskManagerTest {
     @Test
     void shouldReturnEpicTitleWhenGetEpicByID() {
         taskManager.createEpic(epic);
-        Assertions.assertEquals("NEW", epic.getProgress().toString());
+        Assertions.assertEquals("NEW", epic.getStatus().toString());
         Assertions.assertNotNull(taskManager.getEpicByID(1));
         Assertions.assertEquals("Сходить в магазин", taskManager.getEpicByID(1).getTitle());
     }
@@ -263,7 +263,7 @@ class TaskManagerTest {
     @Test
     void shouldReturnTrueWhenRemoveEpicById() {
         taskManager.createEpic(epic);
-        Assertions.assertEquals("NEW", epic.getProgress().toString());
+        Assertions.assertEquals("NEW", epic.getStatus().toString());
         Assertions.assertEquals(1, taskManager.getAllEpics().size());
         taskManager.removeEpicById(epic.getId());
         Assertions.assertEquals(0, taskManager.getAllEpics().size());
@@ -290,11 +290,11 @@ class TaskManagerTest {
     @Test
     void shouldChangeEpicProgress() {
         taskManager.createEpic(epic);
-        Assertions.assertEquals("NEW", epic.getProgress().toString());
+        Assertions.assertEquals("NEW", epic.getStatus().toString());
         taskManager.addSubTask(subTask);
-        taskManager.getSubTaskById(2).setProgress(Status.DONE);
+        taskManager.getSubTaskById(2).setStatus(Status.DONE);
         taskManager.updateSubTask(taskManager.getSubTaskById(2));
-        Assertions.assertEquals("DONE", epic.getProgress().toString());
+        Assertions.assertEquals("DONE", epic.getStatus().toString());
     }
 
     @Test

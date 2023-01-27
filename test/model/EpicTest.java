@@ -24,7 +24,7 @@ class EpicTest {
 
     @Test
     public void shouldEpicStatusIsNewWhenSubTasksIdIsEmpty() {
-        Assertions.assertEquals(Status.NEW.toString(), String.valueOf(epic.getProgress()));
+        Assertions.assertEquals(Status.NEW.toString(), String.valueOf(epic.getStatus()));
     }
 
     @Test
@@ -43,7 +43,7 @@ class EpicTest {
                 60, LocalDateTime.now().plusMinutes(70));
         fileBackedTasksManager.addSubTask(subTask);
         fileBackedTasksManager.addSubTask(subTask2);
-        Assertions.assertEquals(Status.NEW.toString(), String.valueOf(epic.getProgress()));
+        Assertions.assertEquals(Status.NEW.toString(), String.valueOf(epic.getStatus()));
     }
 
     @Test
@@ -54,7 +54,7 @@ class EpicTest {
                 60, LocalDateTime.now().plusMinutes(70));
         fileBackedTasksManager.addSubTask(subTask);
         fileBackedTasksManager.addSubTask(subTask2);
-        Assertions.assertEquals(Status.DONE.toString(), String.valueOf(epic.getProgress()));
+        Assertions.assertEquals(Status.DONE.toString(), String.valueOf(epic.getStatus()));
     }
 
     @Test
@@ -65,7 +65,7 @@ class EpicTest {
                 60, LocalDateTime.now().plusMinutes(70));
         fileBackedTasksManager.addSubTask(subTask);
         fileBackedTasksManager.addSubTask(subTask2);
-        Assertions.assertEquals(Status.IN_PROGRESS.toString(), String.valueOf(epic.getProgress()));
+        Assertions.assertEquals(Status.IN_PROGRESS.toString(), String.valueOf(epic.getStatus()));
     }
 
     @Test
@@ -76,7 +76,7 @@ class EpicTest {
                 1, 60, LocalDateTime.now().plusMinutes(31));
         fileBackedTasksManager.addSubTask(subTask);
         fileBackedTasksManager.addSubTask(subTask2);
-        Assertions.assertEquals(Status.IN_PROGRESS.toString(), String.valueOf(epic.getProgress()));
+        Assertions.assertEquals(Status.IN_PROGRESS.toString(), String.valueOf(epic.getStatus()));
     }
 
     @Test
