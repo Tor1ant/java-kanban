@@ -249,8 +249,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public TreeSet<Task> getPrioritizedTasks() {
-        return prioritizedTasks;
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks);
     }
 
     protected void setId(int id) {
@@ -258,38 +258,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private boolean doesNewTaskCrossesWithExistingTask(Task task) {
-/*        boolean startTimeIsNull = prioritizedTasks.stream().anyMatch(task1 -> task1.getStartTime() != null &&
-                task.getStartTime() != null);
-        boolean startTimeOrEndTimeIsEqualWitchTaskFromTreeSet = false;
-
-        for (Task prioritizedTask : prioritizedTasks) {
-            if (task.getId() == prioritizedTask.getId()) {
-                return null;
-            }
-            if (task.getStartTime() != null && task.getEndTime() != null) {
-                if (task.getEndTime().isBefore(prioritizedTask.getStartTime())) {
-                    startTimeOrEndTimeIsEqualWitchTaskFromTreeSet = true;
-                } else if (task.getStartTime().isAfter(prioritizedTask.getEndTime())) {
-                    startTimeOrEndTimeIsEqualWitchTaskFromTreeSet = true;
-                } else if (task.getStartTime().isEqual(prioritizedTask.getStartTime())) {
-                    return prioritizedTask;
-                } else if (task.getEndTime().isEqual(prioritizedTask.getEndTime())) {
-                    return prioritizedTask;
-                } else {
-                    return prioritizedTask;
-                }
-            } else {
-                startTimeOrEndTimeIsEqualWitchTaskFromTreeSet = true;
-            }
-        }
-        if (startTimeIsNull && startTimeOrEndTimeIsEqualWitchTaskFromTreeSet) {
-            return null;
-        } else
-            return null;
-
-        return  false;
-        
- */
         if (getPrioritizedTasks().isEmpty()) {
             return false;
         }

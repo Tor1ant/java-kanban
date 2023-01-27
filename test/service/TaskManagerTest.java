@@ -7,16 +7,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class TaskManagerTest {
-    FileBackedTasksManager taskManager = new FileBackedTasksManager();
+    FileBackedTasksManager taskManager = new FileBackedTasksManager("SaveData.csv");
     Task task;
     Epic epic;
     SubTask subTask;
@@ -319,16 +317,15 @@ class TaskManagerTest {
         taskManager.addSubTask(new SubTask("SUBTASKTEST", "TESTING", Status.NEW, subTask.getEpicId(),
                 60, LocalDateTime.now().plusMinutes(300)));
         taskManager.createEpic(new Epic("TESTEPIC", "..."));
-        TreeSet<Task> treeset = taskManager.getPrioritizedTasks();
-        FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(new File(
-                "SaveData.csv"));
-        TreeSet<Task> treesetafterESC = fileBackedTasksManager.getPrioritizedTasks();
-        Assertions.assertArrayEquals(treeset.toArray(), treesetafterESC.toArray());
+        List<Task> prioritizedTasks = taskManager.getPrioritizedTasks();
+        FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile("SaveData.csv");
+        List<Task> prioritizedTasksAfterESC = fileBackedTasksManager.getPrioritizedTasks();
+        Assertions.assertArrayEquals(prioritizedTasks.toArray(), prioritizedTasksAfterESC.toArray());
     }
 
     @Test
     void shouldTrueWhenGetPrioritizedTasksIsEmpty() {
-        TreeSet<Task> treeset = taskManager.getPrioritizedTasks();
+        List<Task> prioritizedTasks = taskManager.getPrioritizedTasks();
         taskManager.createEpic(epic);
         taskManager.createTask(task);
         taskManager.addSubTask(subTask);
@@ -343,7 +340,7 @@ class TaskManagerTest {
         taskManager.removeTaskById(2);
         taskManager.removeTaskById(4);
         taskManager.removeEpicById(6);
-        Assertions.assertTrue(treeset.isEmpty());
+        Assertions.assertTrue(prioritizedTasks.isEmpty());
     }
 
     @Test

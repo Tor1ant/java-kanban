@@ -1,6 +1,7 @@
 package model;
 
 import service.Status;
+import service.TaskType;
 
 import java.time.LocalDateTime;
 
@@ -104,5 +105,10 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 '}' + "\n";
+    }
+
+    public String ToStringForSave() {
+        return String.format("%s,%s,%s,%s,%s,%s,%s", this.getId(), TaskType.TASK, this.getTitle(), this.getStatus(),
+                this.getDescription(), this.getDuration(), this.getStartTime());
     }
 }

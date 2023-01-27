@@ -1,6 +1,7 @@
 package model;
 
 import service.Status;
+import service.TaskType;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -41,5 +42,11 @@ public class SubTask extends Task {
                 "epicId=" + epicId +
                 ", status='" + status + '\'' +
                 "} " + "\n";
+    }
+
+    @Override
+    public String ToStringForSave() {
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s", this.getId(), TaskType.SUBTASK, this.getTitle(), this.getStatus(),
+                this.getDescription(), this.getDuration(), this.getStartTime(), this.getEpicId());
     }
 }
