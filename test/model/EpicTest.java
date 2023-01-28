@@ -14,7 +14,7 @@ class EpicTest {
 
     @BeforeEach
     public void createFileBackedTasksManager() {
-        fileBackedTasksManager = new FileBackedTasksManager("SaveData.csv");
+        fileBackedTasksManager = new FileBackedTasksManager();
     }
 
     @BeforeEach

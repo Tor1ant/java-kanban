@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class TaskManagerTest {
-    FileBackedTasksManager taskManager = new FileBackedTasksManager("SaveData.csv");
+    FileBackedTasksManager taskManager = new FileBackedTasksManager();
     Task task;
     Epic epic;
     SubTask subTask;
@@ -318,7 +318,7 @@ class TaskManagerTest {
                 60, LocalDateTime.now().plusMinutes(300)));
         taskManager.createEpic(new Epic("TESTEPIC", "..."));
         List<Task> prioritizedTasks = taskManager.getPrioritizedTasks();
-        FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile("SaveData.csv");
+        FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile();
         List<Task> prioritizedTasksAfterESC = fileBackedTasksManager.getPrioritizedTasks();
         Assertions.assertArrayEquals(prioritizedTasks.toArray(), prioritizedTasksAfterESC.toArray());
     }
@@ -348,10 +348,9 @@ class TaskManagerTest {
         taskManager.createEpic(epic);
         taskManager.createTask(task);
         taskManager.addSubTask(subTask);
-        Task newTask = new Task("ТЕСТ", "TEST", Status.NEW, 30, task.getStartTime());
+        Task newTask = new Task("ТЕСТ", "TEST", Status.NEW, 120, task.getStartTime());
         ValidateException validateException = Assertions.assertThrows(ValidateException.class, () -> taskManager.
                 createTask(newTask));
         Assertions.assertEquals(ValidateException.class, validateException.getClass());
-
     }
 }

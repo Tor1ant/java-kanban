@@ -46,8 +46,8 @@ public class Task {
         return status;
     }
 
-    public void setStatus(Status progress) {
-        this.status = progress;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public int getId() {
@@ -98,17 +98,19 @@ public class Task {
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "model.Task{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
-                '}' + "\n";
+    protected TaskType getTaskType() {
+        if (this instanceof SubTask) {
+            return TaskType.SUBTASK;
+        } else if (this instanceof Epic) {
+            return TaskType.EPIC;
+        } else {
+            return TaskType.TASK;
+        }
     }
 
-    public String ToStringForSave() {
-        return String.format("%s,%s,%s,%s,%s,%s,%s", this.getId(), TaskType.TASK, this.getTitle(), this.getStatus(),
+    @Override
+    public String toString() {
+        return String.format("%s,%s,%s,%s,%s,%s,%s", this.getId(), getTaskType(), this.getTitle(), this.getStatus(),
                 this.getDescription(), this.getDuration(), this.getStartTime());
     }
 }

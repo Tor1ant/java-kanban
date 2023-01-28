@@ -10,33 +10,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private final String pathToSaveData;
+    private final String pathToSaveData = "SaveData.csv";
 
-    public FileBackedTasksManager(String paths) {
-        this.pathToSaveData = paths;
+    public FileBackedTasksManager() {
     }
 
     private void save() {
         final String historyInString = historyToString((InMemoryHistoryManager) historyManager);
-        try (FileWriter fileWriter = new FileWriter(String.valueOf(pathToSaveData))) {
+        try (FileWriter fileWriter = new FileWriter(pathToSaveData)) {
             fileWriter.write("id,type,name,status,description,duration,startTime,epicId");
             fileWriter.write("\n");
             for (Task task : tasks.values()) {
-                fileWriter.write(task.ToStringForSave());
+                fileWriter.write(task.toString());
                 fileWriter.write("\n");
             }
             for (Epic epic : epics.values()) {
-                fileWriter.write(epic.ToStringForSave());
+                fileWriter.write(epic.toString());
                 fileWriter.write("\n");
             }
             for (SubTask subTask : subTasks.values()) {
-                fileWriter.write(subTask.ToStringForSave());
+                fileWriter.write(subTask.toString());
                 fileWriter.write("\n");
             }
             fileWriter.write("\n");
             fileWriter.write(historyInString);
         } catch (IOException e) {
-            throw new ManagerSaveException("Данные не сохранены", e.getCause());
+            throw new ManagerSaveException("Данные не сохранены", e);
         }
     }
 
@@ -176,11 +175,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 return task;
             }
             default:
-                throw new NullPointerException("Задача не считана, файл сохранения повреждён.");
+                throw new NullPointerException("Задача не считана, файл сохранения повреждён или не найден.");
         }
     }
 
-    static private String historyToString(InMemoryHistoryManager manager) {
+    private static String historyToString(InMemoryHistoryManager manager) {
         ArrayList<Integer> tasksId = new ArrayList<>(manager.getIdAndTaskNodes().keySet());
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < tasksId.size(); i++) {
@@ -193,7 +192,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return stringBuilder.toString();
     }
 
-    static private List<Integer> historyFromString(String value) {
+    private static List<Integer> historyFromString(String value) {
         List<Integer> historyList = new ArrayList<>();
         String[] tasksId = value.split(",");
         for (String s : tasksId) {
@@ -202,8 +201,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return historyList;
     }
 
-    static public FileBackedTasksManager loadFromFile(String file) {
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager("SaveData.csv");
+    public static FileBackedTasksManager loadFromFile() {
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
+        File file = new File(fileBackedTasksManager.pathToSaveData);
         String taskInString;
         int MAX_TASK_ID = Integer.MIN_VALUE;
         List<Task> taskList = new ArrayList<>();
@@ -229,10 +229,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     fileBackedTasksManager.epics.get(((SubTask) task).getEpicId()).addSubTasksId(task.getId());
                 } else if (task instanceof Epic) {
                     fileBackedTasksManager.epics.put(task.getId(), (Epic) task);
-                } else if (task != null) {
+                } else
                     fileBackedTasksManager.tasks.put(task.getId(), task);
-                }
-                if (task != null && tasksId.contains(task.getId())) {
+                if (tasksId.contains(task.getId())) {
                     fileBackedTasksManager.historyManager.add(task);
                 }
             }
@@ -241,9 +240,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     MAX_TASK_ID = task.getId();
                 }
             }
-            fileBackedTasksManager.setId(MAX_TASK_ID + 1);
-        } catch (RuntimeException | IOException e) {
-            throw new RuntimeException("Файл не найден");
+            if (file.length() != 0) {
+                fileBackedTasksManager.setId(MAX_TASK_ID + 1);
+            } else fileBackedTasksManager.setId(0);
+        } catch (IOException e) {
+            throw new RuntimeException("Файл " + "\"SaveData.csv\"" + " не найден");
         }
         fileBackedTasksManager.prioritizedTasks.addAll(fileBackedTasksManager.tasks.values());
         fileBackedTasksManager.prioritizedTasks.addAll(fileBackedTasksManager.subTasks.values());

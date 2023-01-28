@@ -14,7 +14,7 @@ class HistoryManagerTest {
             20, LocalDateTime.now().plusMinutes(45));
     Task task3 = new Task("Выучить Английский язык", "до 2025 года", Status.NEW, 60,
             LocalDateTime.now().plusMinutes(90));
-    FileBackedTasksManager tasksManager = new FileBackedTasksManager("SaveData.csv");
+    FileBackedTasksManager tasksManager = new FileBackedTasksManager();
 
     @DisplayName("Проверка добавления таски в историю вызовов")
     @Test

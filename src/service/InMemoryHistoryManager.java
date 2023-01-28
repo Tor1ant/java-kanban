@@ -7,7 +7,7 @@ import java.util.*;
 public class InMemoryHistoryManager implements HistoryManager {
     private TaskNode head;
     private TaskNode tail;
-    private Map<Integer, TaskNode> idAndTaskNodes = new HashMap<>();
+    private final Map<Integer, TaskNode> idAndTaskNodes = new HashMap<>();
 
     @Override
     public void add(Task task) {
@@ -52,18 +52,18 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     public void removeNode(TaskNode taskNode) {
         if (taskNode != null) {
-            if (taskNode.prevTask != null && taskNode.nextTask != null) {
-                taskNode.prevTask.nextTask = taskNode.nextTask;
-                taskNode.nextTask.prevTask = taskNode.prevTask;
-            } else if (taskNode.prevTask == null && idAndTaskNodes.size() != 1) {
-                head = taskNode.nextTask;
-                head.prevTask = null;
-            } else if (idAndTaskNodes.size() != 1) {
-                tail = taskNode.prevTask;
-                tail.nextTask = null;
-            } else if (taskNode.prevTask == null && taskNode.nextTask == null) {
+            if (taskNode.prevTask == null && taskNode.nextTask == null) {
                 head = null;
                 tail = null;
+            } else if (taskNode.prevTask == null) {
+                head = taskNode.nextTask;
+                head.prevTask = null;
+            } else if (taskNode.nextTask == null) {
+                tail = taskNode.prevTask;
+                tail.nextTask = null;
+            } else {
+                taskNode.prevTask.nextTask = taskNode.nextTask;
+                taskNode.nextTask.prevTask = taskNode.prevTask;
             }
         }
     }
