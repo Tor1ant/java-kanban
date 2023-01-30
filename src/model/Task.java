@@ -4,6 +4,7 @@ import service.Status;
 import service.TaskType;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class Task {
     protected String title;
@@ -66,16 +67,23 @@ public class Task {
         this.duration = duration;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public Optional<LocalDateTime> getStartTime() {
+        Optional<LocalDateTime> start = Optional.ofNullable(startTime);
+        if (start.isEmpty()) {
+            return Optional.empty();
+        } else return Optional.of(startTime);
     }
 
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
-        return startTime.plusMinutes(duration);
+    public Optional<LocalDateTime> getEndTime() {
+        Optional<LocalDateTime> start = Optional.ofNullable(startTime);
+        if (start.isEmpty()) {
+            return Optional.empty();
+        } else
+            return Optional.of(startTime.plusMinutes(duration));
     }
 
     @Override

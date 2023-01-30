@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class TaskManagerTest {
-    FileBackedTasksManager taskManager = new FileBackedTasksManager();
+    FileBackedTasksManager taskManager = new FileBackedTasksManager("SaveData.csv");
     Task task;
     Epic epic;
     SubTask subTask;
@@ -68,7 +68,7 @@ class TaskManagerTest {
     @Test
     void ShouldTasksEqualsWhenHaveUpdatedTask() {
         taskManager.createTask(task);
-        Task task1 = new Task("новый заголовок", "обновленная задачи");
+        Task task1 = new Task("новый заголовок", "обновленная задачи", Status.DONE, task.getDuration(), task.getStartTime().get());
         task1.setId(1);
         taskManager.updateTask(task1);
         Assertions.assertEquals("новый заголовок", taskManager.getTaskByID(1).getTitle());
@@ -348,7 +348,7 @@ class TaskManagerTest {
         taskManager.createEpic(epic);
         taskManager.createTask(task);
         taskManager.addSubTask(subTask);
-        Task newTask = new Task("ТЕСТ", "TEST", Status.NEW, 120, task.getStartTime());
+        Task newTask = new Task("ТЕСТ", "TEST", Status.NEW, 120, task.getStartTime().get());
         ValidateException validateException = Assertions.assertThrows(ValidateException.class, () -> taskManager.
                 createTask(newTask));
         Assertions.assertEquals(ValidateException.class, validateException.getClass());

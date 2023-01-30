@@ -10,14 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private final String pathToSaveData = "SaveData.csv";
+    private final String path;
 
-    public FileBackedTasksManager() {
+    public FileBackedTasksManager(String path) {
+        this.path = path;
     }
 
     private void save() {
         final String historyInString = historyToString((InMemoryHistoryManager) historyManager);
-        try (FileWriter fileWriter = new FileWriter(pathToSaveData)) {
+        try (FileWriter fileWriter = new FileWriter(path)) {
             fileWriter.write("id,type,name,status,description,duration,startTime,epicId");
             fileWriter.write("\n");
             for (Task task : tasks.values()) {
@@ -146,7 +147,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
         LocalDateTime startTime;
         try {
-            startTime = LocalDateTime.parse(tasksInString[6]);
+            startTime = LocalDateTime.parse(tasksInString[6].substring(9, tasksInString[6].length() - 1));
         } catch (Exception e) {
             startTime = null;
         }
@@ -165,7 +166,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 epic.setId(id);
                 epic.setDuration(duration);
                 epic.setStartTime(startTime);
-                epic.setEndTime(startTime != null ? startTime.plusMinutes(duration) : null);
+                epic.setEndTime(startTime != null ? java.util.Optional.of(startTime.plusMinutes(duration)) :
+                        java.util.Optional.empty());
                 return epic;
             }
             case TASK: {
@@ -202,8 +204,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     public static FileBackedTasksManager loadFromFile() {
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
-        File file = new File(fileBackedTasksManager.pathToSaveData);
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager("SaveData.csv");
+        File file = new File(fileBackedTasksManager.path);
         String taskInString;
         int MAX_TASK_ID = Integer.MIN_VALUE;
         List<Task> taskList = new ArrayList<>();
@@ -218,7 +220,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                         break;
                     }
                     tasksId = FileBackedTasksManager.historyFromString(taskInString);
-                    break;
                 } else {
                     taskList.add(fileBackedTasksManager.stringToTask(taskInString));
                 }
@@ -244,7 +245,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 fileBackedTasksManager.setId(MAX_TASK_ID + 1);
             } else fileBackedTasksManager.setId(0);
         } catch (IOException e) {
-            throw new RuntimeException("Файл " + "\"SaveData.csv\"" + " не найден");
+            throw new ManagerSaveException("Файл " + "\"SaveData.csv\"" + " не найден");
         }
         fileBackedTasksManager.prioritizedTasks.addAll(fileBackedTasksManager.tasks.values());
         fileBackedTasksManager.prioritizedTasks.addAll(fileBackedTasksManager.subTasks.values());

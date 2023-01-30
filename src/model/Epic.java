@@ -4,20 +4,22 @@ import service.Status;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Epic extends Task {
 
     private final ArrayList<Integer> subTasksId = new ArrayList<>();
 
-    private LocalDateTime endTime;
+    private Optional<LocalDateTime> endTime;
 
     public Epic(String title, String description) {
         super(title, description);
         status = Status.NEW;
     }
 
-    public ArrayList<Integer> getSubTasksId() {
+    public List<Integer> getSubTasksId() {
         return subTasksId;
     }
 
@@ -33,13 +35,15 @@ public class Epic extends Task {
         subTasksId.clear();
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Optional<LocalDateTime> endTime) {
         this.endTime = endTime;
     }
 
     @Override
-    public LocalDateTime getEndTime() {
-        return this.endTime;
+    public Optional<LocalDateTime> getEndTime() {
+        if (Optional.ofNullable(endTime).isEmpty()) {
+            return Optional.empty();
+        } else return endTime;
     }
 
     @Override

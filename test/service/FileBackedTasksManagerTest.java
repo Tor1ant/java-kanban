@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class FileBackedTasksManagerTest {
-    TaskManager taskManager = new FileBackedTasksManager();
+    TaskManager taskManager = new FileBackedTasksManager("SaveData.csv");
 
     @BeforeEach
     void createTasksEpicsSubtasksAndCallThem() {

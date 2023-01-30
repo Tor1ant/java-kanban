@@ -14,7 +14,7 @@ class EpicTest {
 
     @BeforeEach
     public void createFileBackedTasksManager() {
-        fileBackedTasksManager = new FileBackedTasksManager();
+        fileBackedTasksManager = new FileBackedTasksManager("SaveData.csv");
     }
 
     @BeforeEach
@@ -90,7 +90,7 @@ class EpicTest {
 
     @Test
     public void ShouldEpicStartTimeIsNullIfEpicDontHaveSubtasks() {
-        Assertions.assertNull(epic.getStartTime());
+        Assertions.assertNull(epic.getStartTime().orElse(null));
     }
 
     @Test

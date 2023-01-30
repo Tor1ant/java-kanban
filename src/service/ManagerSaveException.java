@@ -5,4 +5,8 @@ public class ManagerSaveException extends RuntimeException {
         super(message, throwable);
 
     }
+
+    public ManagerSaveException(String message) {
+        super(message);
+    }
 }
