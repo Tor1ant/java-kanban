@@ -46,7 +46,7 @@ public class FileBackedTasksManagerTest {
     @DisplayName("Проверка загрузки тасок из файла после сохранения")
     @Test
     void loadFromFileTasksEpicsAndSubtasksTest() {
-        TaskManager taskManagerAfterESC = FileBackedTasksManager.loadFromFile();
+        TaskManager taskManagerAfterESC = FileBackedTasksManager.loadFromFile("SaveData.csv");
         Assertions.assertEquals(FileBackedTasksManager.class, taskManagerAfterESC.getClass(), "Таскменеджер " +
                 "не загружен");
         int tasksSIze = taskManager.getAllTasks().size();
@@ -62,7 +62,7 @@ public class FileBackedTasksManagerTest {
     void loadFromFileEpicWithoutSubTasksTest() {
         taskManager.removeAllTasks();
         taskManager.removeEpicById(4);
-        TaskManager taskManagerAfterESC = FileBackedTasksManager.loadFromFile();
+        TaskManager taskManagerAfterESC = FileBackedTasksManager.loadFromFile("SaveData.csv");
         List<Task> taskList = taskManagerAfterESC.getHistory();
         Assertions.assertEquals(1, taskList.size(), "История содержит больше одного элемента");
     }
@@ -75,7 +75,7 @@ public class FileBackedTasksManagerTest {
         taskManager.removeAllSubTasks();
         Task task = new Task("Встретить новый год", "...", Status.NEW, 60, LocalDateTime.now());
         taskManager.createTask(task);
-        TaskManager taskManagerAfterESC = FileBackedTasksManager.loadFromFile();
+        TaskManager taskManagerAfterESC = FileBackedTasksManager.loadFromFile("SaveData.csv");
         NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class,
                 taskManagerAfterESC::getHistory);
         Assertions.assertNull(nullPointerException.getMessage(), "История не пустая");

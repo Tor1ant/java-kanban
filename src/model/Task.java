@@ -68,10 +68,7 @@ public class Task {
     }
 
     public Optional<LocalDateTime> getStartTime() {
-        Optional<LocalDateTime> start = Optional.ofNullable(startTime);
-        if (start.isEmpty()) {
-            return Optional.empty();
-        } else return Optional.of(startTime);
+        return Optional.ofNullable(startTime);
     }
 
     public void setStartTime(LocalDateTime startTime) {
@@ -79,11 +76,7 @@ public class Task {
     }
 
     public Optional<LocalDateTime> getEndTime() {
-        Optional<LocalDateTime> start = Optional.ofNullable(startTime);
-        if (start.isEmpty()) {
-            return Optional.empty();
-        } else
-            return Optional.of(startTime.plusMinutes(duration));
+        return Optional.ofNullable(startTime);
     }
 
     @Override
@@ -119,6 +112,6 @@ public class Task {
     @Override
     public String toString() {
         return String.format("%s,%s,%s,%s,%s,%s,%s", this.getId(), getTaskType(), this.getTitle(), this.getStatus(),
-                this.getDescription(), this.getDuration(), this.getStartTime());
+                this.getDescription(), this.getDuration(), this.getStartTime().isPresent() ? this.getStartTime().get() : null);
     }
 }

@@ -147,7 +147,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
         LocalDateTime startTime;
         try {
-            startTime = LocalDateTime.parse(tasksInString[6].substring(9, tasksInString[6].length() - 1));
+            startTime = LocalDateTime.parse(tasksInString[6]);
         } catch (Exception e) {
             startTime = null;
         }
@@ -166,8 +166,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 epic.setId(id);
                 epic.setDuration(duration);
                 epic.setStartTime(startTime);
-                epic.setEndTime(startTime != null ? java.util.Optional.of(startTime.plusMinutes(duration)) :
-                        java.util.Optional.empty());
+                epic.setEndTime(startTime == null ? null : startTime.plusMinutes(duration));
                 return epic;
             }
             case TASK: {
@@ -203,8 +202,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return historyList;
     }
 
-    public static FileBackedTasksManager loadFromFile() {
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager("SaveData.csv");
+    public static FileBackedTasksManager loadFromFile(String path) {
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(path);
         File file = new File(fileBackedTasksManager.path);
         String taskInString;
         int MAX_TASK_ID = Integer.MIN_VALUE;
@@ -245,7 +244,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 fileBackedTasksManager.setId(MAX_TASK_ID + 1);
             } else fileBackedTasksManager.setId(0);
         } catch (IOException e) {
-            throw new ManagerSaveException("Файл " + "\"SaveData.csv\"" + " не найден");
+            throw new ManagerSaveException("Ошибка чтения из файла с сохранёнными данными");
         }
         fileBackedTasksManager.prioritizedTasks.addAll(fileBackedTasksManager.tasks.values());
         fileBackedTasksManager.prioritizedTasks.addAll(fileBackedTasksManager.subTasks.values());

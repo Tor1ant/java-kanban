@@ -12,7 +12,7 @@ public class Epic extends Task {
 
     private final ArrayList<Integer> subTasksId = new ArrayList<>();
 
-    private Optional<LocalDateTime> endTime;
+    private LocalDateTime endTime;
 
     public Epic(String title, String description) {
         super(title, description);
@@ -35,15 +35,13 @@ public class Epic extends Task {
         subTasksId.clear();
     }
 
-    public void setEndTime(Optional<LocalDateTime> endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
     @Override
     public Optional<LocalDateTime> getEndTime() {
-        if (Optional.ofNullable(endTime).isEmpty()) {
-            return Optional.empty();
-        } else return endTime;
+        return Optional.ofNullable(endTime);
     }
 
     @Override

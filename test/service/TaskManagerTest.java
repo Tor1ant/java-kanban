@@ -68,7 +68,8 @@ class TaskManagerTest {
     @Test
     void ShouldTasksEqualsWhenHaveUpdatedTask() {
         taskManager.createTask(task);
-        Task task1 = new Task("новый заголовок", "обновленная задачи", Status.DONE, task.getDuration(), task.getStartTime().get());
+        Task task1 = new Task("новый заголовок", "обновленная задачи", Status.DONE, task.getDuration(),
+                task.getStartTime().get());
         task1.setId(1);
         taskManager.updateTask(task1);
         Assertions.assertEquals("новый заголовок", taskManager.getTaskByID(1).getTitle());
@@ -318,7 +319,7 @@ class TaskManagerTest {
                 60, LocalDateTime.now().plusMinutes(300)));
         taskManager.createEpic(new Epic("TESTEPIC", "..."));
         List<Task> prioritizedTasks = taskManager.getPrioritizedTasks();
-        FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile();
+        FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile("SaveData.csv");
         List<Task> prioritizedTasksAfterESC = fileBackedTasksManager.getPrioritizedTasks();
         Assertions.assertArrayEquals(prioritizedTasks.toArray(), prioritizedTasksAfterESC.toArray());
     }
