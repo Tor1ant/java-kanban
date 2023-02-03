@@ -9,4 +9,8 @@ public final class Managers {
     static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
     }
+
+   public static FileBackedTasksManager getDefaultFileBacked() {
+        return FileBackedTasksManager.loadFromFile("SaveData.csv");
+    }
 }

@@ -1,4 +1,1 @@
 id,type,name,status,description,duration,startTime,epicId
-1,EPIC,Сходить в магазин,NEW,на это есть пол часа,120,2023-02-01T01:23:37.182806100
-2,SUBTASK,Выкинуть мусор,NEW,перед магазином,120,2023-02-01T01:23:37.182806100,1
-
