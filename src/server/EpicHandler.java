@@ -52,9 +52,10 @@ public class EpicHandler extends TaskHandler {
             fileBackedTasksManager.removeAllEpics();
             writeResponse(exchange, "Все Эпики удалены", 200);
         } else {
-            int epicId = Integer.parseInt(query.get().substring(3));
             try {
-                Epic epic = fileBackedTasksManager.getEpicByID(epicId);
+                int epicID = Integer.parseInt(query.get().substring(3));
+                Epic epic = fileBackedTasksManager.getEpicByID(epicID);
+                fileBackedTasksManager.removeEpicById(epicID);
                 writeResponse(exchange, String.format("Эпик \"%s\" удалён.", epic.getTitle()), 200);
             } catch (NullPointerException e) {
                 writeResponse(exchange, "Эпика с таким id нет", 400);
