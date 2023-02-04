@@ -15,7 +15,6 @@ public class HistoryHandler extends PrioritizedTasksHandler {
             historyHandle(exchange);
         } else
             writeResponse(exchange, "Данный метод не поддерживается.", 405);
-
     }
 
     private void historyHandle(HttpExchange exchange) {

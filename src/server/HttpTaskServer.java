@@ -19,6 +19,7 @@ public class HttpTaskServer {
         httpServer.createContext("/tasks", new PrioritizedTasksHandler(fileBackedTasksManager));
         httpServer.createContext("/tasks", new HistoryHandler(fileBackedTasksManager));
         httpServer.createContext("/tasks/history", new HistoryHandler(fileBackedTasksManager));
+        httpServer.createContext("/tasks/epic",new EpicHandler(fileBackedTasksManager));
     }
 
     public void startServer() {

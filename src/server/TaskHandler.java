@@ -13,8 +13,9 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 class TaskHandler implements HttpHandler {
-    FileBackedTasksManager fileBackedTasksManager;
-    Gson gson;
+    protected FileBackedTasksManager fileBackedTasksManager;
+    protected Gson gson;
+    protected Optional<String> query;
 
     public TaskHandler(FileBackedTasksManager fileBackedTasksManager) {
         this.fileBackedTasksManager = fileBackedTasksManager;
@@ -24,6 +25,7 @@ class TaskHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) {
         String requestMethod = exchange.getRequestMethod();
+        query = Optional.ofNullable(exchange.getRequestURI().getQuery());
         switch (requestMethod) {
             case "GET":
                 handleGetTasks(exchange);
@@ -33,12 +35,12 @@ class TaskHandler implements HttpHandler {
                 break;
             case "POST":
                 handlePost(exchange);
-            default: writeResponse(exchange,"Данный метод не поддерживается.",405);
+            default:
+                writeResponse(exchange, "Данный метод не поддерживается.", 405);
         }
     }
 
     private void handleGetTasks(HttpExchange exchange) {
-        Optional<String> query = Optional.ofNullable(exchange.getRequestURI().getQuery());
         if (query.isEmpty()) {
             ArrayList<Task> allTasks = fileBackedTasksManager.getAllTasks();
             String allTasksInJson = gson.toJson(allTasks);
@@ -51,7 +53,6 @@ class TaskHandler implements HttpHandler {
     }
 
     private void handleDelete(HttpExchange exchange) {
-        Optional<String> query = Optional.ofNullable(exchange.getRequestURI().getQuery());
         if (query.isEmpty()) {
             fileBackedTasksManager.removeAllTasks();
             writeResponse(exchange, "Все задачи удалены.", 200);
@@ -64,7 +65,7 @@ class TaskHandler implements HttpHandler {
         }
     }
 
-    private void handlePost(HttpExchange exchange) {
+    private void handlePost(HttpExchange exchange){
         InputStream inputStream = exchange.getRequestBody();
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             StringBuilder taskInString = new StringBuilder();
@@ -76,7 +77,7 @@ class TaskHandler implements HttpHandler {
                 if (task.getId() == taskForPost.getId()) {
                     fileBackedTasksManager.updateTask(taskForPost);
                     writeResponse(exchange, "задача " + taskForPost.getTitle() + " добавлена", 200);
-                   return;
+                    return;
                 }
             }
             fileBackedTasksManager.createTask(taskForPost);

@@ -65,6 +65,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateEpic(Epic epic) {
         isTaskCrossWithAnyTask(epic);
         epics.put(epic.getId(), epic);
+        changeEpicProgress(epic.getId());
     }
 
     @Override
@@ -168,8 +169,10 @@ public class InMemoryTaskManager implements TaskManager {
     public ArrayList<SubTask> getListOfEpicsSubTasks(int epicId) {
         ArrayList<SubTask> subTaskArrayList = new ArrayList<>();
         Epic epic = epics.get(epicId);
-        for (Integer subTaskId : epic.getSubTasksId()) {
-            subTaskArrayList.add(subTasks.get(subTaskId));
+        if (epic.getSubTasksId() != null) {
+            for (Integer subTaskId : epic.getSubTasksId()) {
+                subTaskArrayList.add(subTasks.get(subTaskId));
+            }
         }
         return subTaskArrayList;
     }
@@ -178,7 +181,7 @@ public class InMemoryTaskManager implements TaskManager {
         ArrayList<SubTask> subTaskArrayList = getListOfEpicsSubTasks(epicID);
         int countOfProgressNew = 0;
         int countOfProgressDone = 0;
-        if (epics.get(epicID).getSubTasksId().isEmpty()) {
+        if (subTaskArrayList.isEmpty()) {
             epics.get(epicID).setStatus(Status.NEW);
             changeEpicDuration(epicID, subTaskArrayList);
             return;
