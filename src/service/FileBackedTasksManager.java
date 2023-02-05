@@ -133,6 +133,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         save();
     }
 
+    @Override
+    public ArrayList<SubTask> getListOfEpicsSubTasks(int epicId) {
+        ArrayList<SubTask> epicSubTasks = super.getListOfEpicsSubTasks(epicId);
+        save();
+        return epicSubTasks;
+    }
+
     private Task stringToTask(String value) {
         String[] tasksInString = value.split(",");
         int id = Integer.parseInt(tasksInString[0]);

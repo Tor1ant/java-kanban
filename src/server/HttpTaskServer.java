@@ -17,10 +17,10 @@ public class HttpTaskServer {
         httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks/task", new TaskHandler(fileBackedTasksManager));
         httpServer.createContext("/tasks", new PrioritizedTasksHandler(fileBackedTasksManager));
-        httpServer.createContext("/tasks", new HistoryHandler(fileBackedTasksManager));
         httpServer.createContext("/tasks/history", new HistoryHandler(fileBackedTasksManager));
         httpServer.createContext("/tasks/epic",new EpicHandler(fileBackedTasksManager));
         httpServer.createContext("/tasks/subtask", new SubTaskHandler(fileBackedTasksManager));
+        httpServer.createContext("/tasks/subtask/epic", new EpicSubTasksHandler(fileBackedTasksManager));
     }
 
     public void startServer() {
