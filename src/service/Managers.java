@@ -10,7 +10,11 @@ public final class Managers {
         return new InMemoryHistoryManager();
     }
 
-   public static FileBackedTasksManager getDefaultFileBacked() {
+    public static FileBackedTasksManager getDefaultFileBacked() {
         return FileBackedTasksManager.loadFromFile("SaveData.csv");
+    }
+
+   public static HttpTaskManager getDefaultHttpTaskManager() {
+        return HttpTaskManager.loadFromServer("http://localhost:8078");
     }
 }

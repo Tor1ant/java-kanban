@@ -28,16 +28,27 @@ public class KVServer {
     }
 
     private void load(HttpExchange h) throws IOException {
-        if (h.getRequestMethod().equals("GET")) {
-            String key = h.getRequestURI().getPath().substring("/load/".length());
+        String key = h.getRequestURI().getPath().substring("/load/".length());
+        if (h.getRequestMethod().equals("GET") && data.get(key) != null) {
             String value = data.get(key);
             sendText(h, value);
-        } else
-            System.out.println("/load ждёт Get-запрос, а получил: " + h.getRequestMethod());
+            h.sendResponseHeaders(200, 0);
+            h.close();
+            return;
+        } else {
+            if (data.get(key) == null) {
+                System.out.println("Value для ключа отсутствует");
+                h.sendResponseHeaders(400, 0);
+                h.close();
+                return;
+            }
+        }
+        System.out.println("/load ждёт Get-запрос, а получил: " + h.getRequestMethod());
         h.sendResponseHeaders(405, 0);
+        h.close();
     }
 
-    private void save(HttpExchange h) throws IOException {
+    protected void save(HttpExchange h) throws IOException {
         try {
             System.out.println("\n/save");
             if (!hasAuth(h)) {

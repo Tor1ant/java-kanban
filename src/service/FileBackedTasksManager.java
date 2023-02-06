@@ -16,7 +16,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.path = path;
     }
 
-    private void save() {
+    protected void save() {
         final String historyInString = historyToString((InMemoryHistoryManager) historyManager);
         try (FileWriter fileWriter = new FileWriter(path)) {
             fileWriter.write("id,type,name,status,description,duration,startTime,epicId");
@@ -187,7 +187,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    private static String historyToString(InMemoryHistoryManager manager) {
+    protected static String historyToString(InMemoryHistoryManager manager) {
         ArrayList<Integer> tasksId = new ArrayList<>(manager.getIdAndTaskNodes().keySet());
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < tasksId.size(); i++) {

@@ -11,8 +11,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         Gson gson = new Gson();
-        new HttpTaskServer().startServer();
         new KVServer().start();
+        new HttpTaskServer().startServer();
         KVTaskClient kvTaskClient = new KVTaskClient("http://localhost:8078/register");
         Task task = new Task("Новая таска для сохранения", "описание таски", Status.IN_PROGRESS,
                 60, LocalDateTime.now());

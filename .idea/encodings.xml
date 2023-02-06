@@ -16,6 +16,7 @@
     <file url="file://$PROJECT_DIR$/src/server/TaskHandler.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/service/FileBackedTasksManager.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/service/HistoryManager.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/service/HttpTaskManager.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/service/InMemoryHistoryManager.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/service/InMemoryTaskManager.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/service/Main.java" charset="UTF-8" />

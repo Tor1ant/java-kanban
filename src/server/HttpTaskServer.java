@@ -1,7 +1,7 @@
 package server;
 
 import com.sun.net.httpserver.HttpServer;
-import service.FileBackedTasksManager;
+import service.HttpTaskManager;
 import service.Managers;
 
 import java.io.IOException;
@@ -10,17 +10,17 @@ import java.net.InetSocketAddress;
 public class HttpTaskServer {
     int PORT = 8080;
     private final HttpServer httpServer;
-    FileBackedTasksManager fileBackedTasksManager;
+    HttpTaskManager httpTaskManager;
 
     public HttpTaskServer() throws IOException {
-        fileBackedTasksManager = Managers.getDefaultFileBacked();
+        httpTaskManager = Managers.getDefaultHttpTaskManager();
         httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
-        httpServer.createContext("/tasks/task", new TaskHandler(fileBackedTasksManager));
-        httpServer.createContext("/tasks", new PrioritizedTasksHandler(fileBackedTasksManager));
-        httpServer.createContext("/tasks/history", new HistoryHandler(fileBackedTasksManager));
-        httpServer.createContext("/tasks/epic",new EpicHandler(fileBackedTasksManager));
-        httpServer.createContext("/tasks/subtask", new SubTaskHandler(fileBackedTasksManager));
-        httpServer.createContext("/tasks/subtask/epic", new EpicSubTasksHandler(fileBackedTasksManager));
+        httpServer.createContext("/tasks/task", new TaskHandler(httpTaskManager));
+        httpServer.createContext("/tasks", new PrioritizedTasksHandler(httpTaskManager));
+        httpServer.createContext("/tasks/history", new HistoryHandler(httpTaskManager));
+        httpServer.createContext("/tasks/epic",new EpicHandler(httpTaskManager));
+        httpServer.createContext("/tasks/subtask", new SubTaskHandler(httpTaskManager));
+        httpServer.createContext("/tasks/subtask/epic", new EpicSubTasksHandler(httpTaskManager));
     }
 
     public void startServer() {
