@@ -33,14 +33,4 @@ public class HttpTaskServer {
         System.out.println("Сервер прекратил работу " + PORT);
         httpServer.stop(0);
     }
-
-    public static void main(String[] args) {
-        try {
-            HttpTaskServer taskServer = new HttpTaskServer();
-            taskServer.startServer();
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

@@ -1,6 +1,5 @@
 package server;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
@@ -11,16 +10,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class KVTaskClient {
-    Gson gson = new Gson();
-    URI uri;
-    HttpRequest httpRequest;
-    String apiToken;
-    HttpClient httpClient;
+    private String apiToken;
+    private final HttpClient httpClient;
+    private final HttpResponse.BodyHandler<String> handler;
+    URI clientURI;
 
     public KVTaskClient(String uri) {
-        this.uri = URI.create(uri);
-        this.httpRequest = HttpRequest.newBuilder().uri(this.uri).GET().build();
-        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
+        clientURI = URI.create(uri.substring(0, uri.length() - 9));
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(uri)).GET().build();
+        handler = HttpResponse.BodyHandlers.ofString();
         this.httpClient = HttpClient.newHttpClient();
         try {
             HttpResponse<String> httpResponse = httpClient.send(httpRequest, handler);
@@ -34,7 +32,30 @@ public class KVTaskClient {
     }
 
     public void put(String key, String json) {
+        String path = clientURI + "/save/" + key + "?API_TOKEN=" + apiToken;
+        URI uri = URI.create(path);
+        //собрать httprequest
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(json)).build();
+        try {
+            HttpResponse<String> httpResponse = httpClient.send(request, handler);
+            System.out.println("код ответа на запрос: " + httpResponse.statusCode());
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public String load(String key) {
+        String response;
+        String path = clientURI + "/load/" + key + "?API_TOKEN=" + apiToken;
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(path)).GET().build();
+        try {
+            HttpResponse<String> httpResponse = httpClient.send(httpRequest, handler);
+            System.out.println("код ответа на запрос: " + httpResponse.statusCode());
+            response = httpResponse.body();
 
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return response;
     }
 }
