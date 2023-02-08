@@ -2,13 +2,13 @@ package server;
 
 import com.sun.net.httpserver.HttpExchange;
 import model.Epic;
-import service.FileBackedTasksManager;
+import service.HttpTaskManager;
 
 import java.util.Optional;
 
 public class EpicHandler extends TaskHandler {
-    public EpicHandler(FileBackedTasksManager fileBackedTasksManager) {
-        super(fileBackedTasksManager);
+    public EpicHandler(HttpTaskManager httpTaskManagerer) {
+        super(httpTaskManagerer);
     }
 
     @Override
@@ -29,16 +29,16 @@ public class EpicHandler extends TaskHandler {
     }
 
     private void handleGetEpic(HttpExchange exchange) {
-        handleGet(exchange, fileBackedTasksManager::getAllEpics, fileBackedTasksManager::getEpicByID);
+        handleGet(exchange, httpTaskManager::getAllEpics, httpTaskManager::getEpicByID);
     }
 
     private void handleDeleteEpic(HttpExchange exchange) {
-        handleDelete(exchange, fileBackedTasksManager::removeAllEpics, fileBackedTasksManager::getEpicByID,
-                fileBackedTasksManager::removeEpicById);
+        handleDelete(exchange, httpTaskManager::removeAllEpics, httpTaskManager::getEpicByID,
+                httpTaskManager::removeEpicById);
     }
 
     private void handlePostEpic(HttpExchange exchange) {
-        handlePost(exchange,fileBackedTasksManager::getAllEpics,fileBackedTasksManager::updateEpic,
-                fileBackedTasksManager::createEpic, Epic.class);
+        handlePost(exchange, httpTaskManager::getAllEpics, httpTaskManager::updateEpic,
+                httpTaskManager::createEpic, Epic.class);
     }
 }

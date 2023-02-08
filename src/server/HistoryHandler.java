@@ -1,11 +1,11 @@
 package server;
 
 import com.sun.net.httpserver.HttpExchange;
-import service.FileBackedTasksManager;
+import service.HttpTaskManager;
 
 public class HistoryHandler extends PrioritizedTasksHandler {
-    public HistoryHandler(FileBackedTasksManager fileBackedTasksManager) {
-        super(fileBackedTasksManager);
+    public HistoryHandler(HttpTaskManager httpTaskManager) {
+        super(httpTaskManager);
     }
 
     @Override
@@ -19,7 +19,7 @@ public class HistoryHandler extends PrioritizedTasksHandler {
 
     private void historyHandle(HttpExchange exchange) {
         if (exchange.getRequestURI().getQuery() == null) {
-            String historyInJson = gson.toJson(fileBackedTasksManager.getHistory());
+            String historyInJson = gson.toJson(httpTaskManager.getHistory());
             writeResponse(exchange, historyInJson, 200);
         } else
             writeResponse(exchange, "у данного запроса не может быть параметров", 400);

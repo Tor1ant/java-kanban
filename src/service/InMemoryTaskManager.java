@@ -208,6 +208,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void changeEpicDuration(int epicID, List<SubTask> epicSubTasks) {
+        int nullableStartTimeSubtasks = 0;
         Long duration = 0L;
         LocalDateTime MIN_LOCAL_DATE_TIME = LocalDateTime.MAX;
         LocalDateTime MAX_LOCAL_DATE_TIME = LocalDateTime.MIN;
@@ -226,8 +227,16 @@ public class InMemoryTaskManager implements TaskManager {
                 if (MAX_LOCAL_DATE_TIME.isBefore(epicSubTask.getEndTime().get())) {
                     MAX_LOCAL_DATE_TIME = epicSubTask.getEndTime().get();
                 }
+            } else {
+                nullableStartTimeSubtasks++;
             }
         }
+        if (!epicSubTasks.isEmpty() && nullableStartTimeSubtasks == epicSubTasks.size()) {
+            MIN_LOCAL_DATE_TIME = null;
+            MAX_LOCAL_DATE_TIME = null;
+            duration = null;
+        }
+
         epics.get(epicID).setStartTime(MIN_LOCAL_DATE_TIME);
         epics.get(epicID).setEndTime(MAX_LOCAL_DATE_TIME);
         epics.get(epicID).setDuration(duration);

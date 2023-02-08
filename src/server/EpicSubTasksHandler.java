@@ -3,15 +3,15 @@ package server;
 import com.sun.net.httpserver.HttpExchange;
 
 import model.SubTask;
-import service.FileBackedTasksManager;
+import service.HttpTaskManager;
 
 import java.util.ArrayList;
 
 import java.util.Optional;
 
 public class EpicSubTasksHandler extends TaskHandler {
-    public EpicSubTasksHandler(FileBackedTasksManager fileBackedTasksManager) {
-        super(fileBackedTasksManager);
+    public EpicSubTasksHandler(HttpTaskManager httpTaskManager) {
+        super(httpTaskManager);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class EpicSubTasksHandler extends TaskHandler {
         } else {
             String[] epicIdInString = query.get().split("=");
             int taskId = Integer.parseInt(epicIdInString[1]);
-            ArrayList<SubTask> subTaskList = fileBackedTasksManager.getListOfEpicsSubTasks(taskId);
+            ArrayList<SubTask> subTaskList = httpTaskManager.getListOfEpicsSubTasks(taskId);
             writeResponse(exchange, gson.toJson(subTaskList), 200);
         }
     }

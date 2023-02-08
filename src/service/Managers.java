@@ -15,6 +15,6 @@ public final class Managers {
     }
 
    public static HttpTaskManager getDefaultHttpTaskManager() {
-        return HttpTaskManager.loadFromServer("http://localhost:8078");
+        return new HttpTaskManager("http://localhost:8078");
     }
 }

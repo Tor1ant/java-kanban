@@ -1,5 +1,6 @@
 package service;
 
+import com.google.gson.Gson;
 import model.Epic;
 import model.SubTask;
 import model.Task;
@@ -8,8 +9,9 @@ import org.junit.jupiter.api.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class FileBackedTasksManagerTest {
+public class FileBackedTasksManagerTest extends TaskManagerTest {
     TaskManager taskManager = new FileBackedTasksManager("SaveData.csv");
+    Gson gson = new Gson();
 
     @BeforeEach
     void createTasksEpicsSubtasksAndCallThem() {

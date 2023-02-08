@@ -6,7 +6,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import model.Task;
-import service.FileBackedTasksManager;
+import service.HttpTaskManager;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -17,12 +17,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 class TaskHandler implements HttpHandler {
-    protected FileBackedTasksManager fileBackedTasksManager;
+    protected HttpTaskManager httpTaskManager;
     protected Gson gson;
     protected Optional<String> query;
 
-    public TaskHandler(FileBackedTasksManager fileBackedTasksManager) {
-        this.fileBackedTasksManager = fileBackedTasksManager;
+    public TaskHandler(HttpTaskManager httpTaskManager) {
+        this.httpTaskManager = httpTaskManager;
         gson = new Gson();
     }
 
@@ -45,17 +45,17 @@ class TaskHandler implements HttpHandler {
     }
 
     private void handleGetTasks(HttpExchange exchange) {
-        handleGet(exchange, fileBackedTasksManager::getAllTasks, fileBackedTasksManager::getTaskByID);
+        handleGet(exchange, httpTaskManager::getAllTasks, httpTaskManager::getTaskByID);
     }
 
     private void handleDeleteTask(HttpExchange exchange) {
-        handleDelete(exchange, fileBackedTasksManager::removeAllTasks, fileBackedTasksManager::getTaskByID,
-                fileBackedTasksManager::removeTaskById);
+        handleDelete(exchange, httpTaskManager::removeAllTasks, httpTaskManager::getTaskByID,
+                httpTaskManager::removeTaskById);
     }
 
     private void handlePostTask(HttpExchange exchange) {
-        handlePost(exchange, fileBackedTasksManager::getAllTasks, fileBackedTasksManager::updateTask,
-                fileBackedTasksManager::createTask, Task.class);
+        handlePost(exchange, httpTaskManager::getAllTasks, httpTaskManager::updateTask,
+                httpTaskManager::createTask, Task.class);
     }
 
     protected void writeResponse(HttpExchange exchange, String response, int code) {
@@ -83,7 +83,11 @@ class TaskHandler implements HttpHandler {
         } else {
             String[] taskIdInString = query.get().split("=");
             int taskId = Integer.parseInt(taskIdInString[1]);
-            writeResponse(exchange, gson.toJson(taskByIdGetter.apply(taskId)), 200);
+            try {
+                writeResponse(exchange, gson.toJson(taskByIdGetter.apply(taskId)), 200);
+            } catch (NullPointerException e) {
+                writeResponse(exchange, "Задачи с таким id нет", 400);
+            }
         }
     }
 
@@ -115,13 +119,10 @@ class TaskHandler implements HttpHandler {
     protected <T extends Task> void handlePost(HttpExchange exchange, Supplier<ArrayList<T>> AllTasksGetter,
                                                Consumer<T> TaskUpdater, Consumer<T> TaskCreate, Class<T> tClass) {
         InputStream inputStream = exchange.getRequestBody();
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,
-                StandardCharsets.UTF_8))) {
-            StringBuilder taskInString = new StringBuilder();
-            while (bufferedReader.ready()) {
-                taskInString.append(bufferedReader.readLine());
-            }
-            T taskForPost = gson.fromJson(taskInString.toString(), tClass);
+        try {
+            byte[] bytes = inputStream.readAllBytes();
+            String s = new String(bytes, StandardCharsets.UTF_8);
+            T taskForPost = gson.fromJson(s, tClass);
             for (T task : AllTasksGetter.get()) {
                 if (task.getId() == taskForPost.getId()) {
                     TaskUpdater.accept(taskForPost);

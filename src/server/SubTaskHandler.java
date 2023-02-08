@@ -2,13 +2,13 @@ package server;
 
 import com.sun.net.httpserver.HttpExchange;
 import model.SubTask;
-import service.FileBackedTasksManager;
+import service.HttpTaskManager;
 
 import java.util.Optional;
 
 public class SubTaskHandler extends TaskHandler {
-    public SubTaskHandler(FileBackedTasksManager fileBackedTasksManager) {
-        super(fileBackedTasksManager);
+    public SubTaskHandler(HttpTaskManager httpTaskManager) {
+        super(httpTaskManager);
     }
 
     @Override
@@ -23,23 +23,23 @@ public class SubTaskHandler extends TaskHandler {
                 handleDeleteSubTask(exchange);
                 break;
             case "POST":
-            handlePostSubTask(exchange);
+                handlePostSubTask(exchange);
             default:
                 writeResponse(exchange, "Данный метод не поддерживается.", 405);
         }
     }
 
     private void handleGetSubTasks(HttpExchange exchange) {
-        handleGet(exchange, fileBackedTasksManager::getAllSubTasks, fileBackedTasksManager::getSubTaskById);
+        handleGet(exchange, httpTaskManager::getAllSubTasks, httpTaskManager::getSubTaskById);
     }
 
     private void handleDeleteSubTask(HttpExchange exchange) {
-        handleDelete(exchange, fileBackedTasksManager::removeAllSubTasks, fileBackedTasksManager::getSubTaskById,
-                fileBackedTasksManager::removeSubTaskById);
+        handleDelete(exchange, httpTaskManager::removeAllSubTasks, httpTaskManager::getSubTaskById,
+                httpTaskManager::removeSubTaskById);
     }
 
     private void handlePostSubTask(HttpExchange exchange) {
-        handlePost(exchange, fileBackedTasksManager::getAllSubTasks, fileBackedTasksManager::updateSubTask,
-                fileBackedTasksManager::addSubTask, SubTask.class);
+        handlePost(exchange, httpTaskManager::getAllSubTasks, httpTaskManager::updateSubTask,
+                httpTaskManager::addSubTask, SubTask.class);
     }
 }
