@@ -16,7 +16,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.path = path;
     }
 
-    private void save() {
+    protected void save() {
         final String historyInString = historyToString((InMemoryHistoryManager) historyManager);
         try (FileWriter fileWriter = new FileWriter(path)) {
             fileWriter.write("id,type,name,status,description,duration,startTime,epicId");
@@ -133,6 +133,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         save();
     }
 
+    @Override
+    public ArrayList<SubTask> getListOfEpicsSubTasks(int epicId) {
+        ArrayList<SubTask> epicSubTasks = super.getListOfEpicsSubTasks(epicId);
+        save();
+        return epicSubTasks;
+    }
+
     private Task stringToTask(String value) {
         String[] tasksInString = value.split(",");
         int id = Integer.parseInt(tasksInString[0]);
@@ -180,7 +187,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    private static String historyToString(InMemoryHistoryManager manager) {
+    protected static String historyToString(InMemoryHistoryManager manager) {
         ArrayList<Integer> tasksId = new ArrayList<>(manager.getIdAndTaskNodes().keySet());
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < tasksId.size(); i++) {
@@ -193,11 +200,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return stringBuilder.toString();
     }
 
-    private static List<Integer> historyFromString(String value) {
+    protected static List<Integer> historyFromString(String value) {
         List<Integer> historyList = new ArrayList<>();
         String[] tasksId = value.split(",");
         for (String s : tasksId) {
-            historyList.add(Integer.parseInt(s));
+            if (!s.isBlank()) {
+                historyList.add(Integer.parseInt(s));
+            }
         }
         return historyList;
     }
@@ -240,7 +249,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     MAX_TASK_ID = task.getId();
                 }
             }
-            if (file.length() != 0) {
+            if (file.length() != 58) {
                 fileBackedTasksManager.setId(MAX_TASK_ID + 1);
             } else fileBackedTasksManager.setId(0);
         } catch (IOException e) {

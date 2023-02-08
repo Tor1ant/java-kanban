@@ -3,5 +3,9 @@ package service;
 public enum Status {
     NEW,
     IN_PROGRESS,
-    DONE
+    DONE;
+
+    public String getStatus() {
+        return this.name();
+    }
 }

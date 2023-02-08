@@ -9,4 +9,12 @@ public final class Managers {
     static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
     }
+
+    public static FileBackedTasksManager getDefaultFileBacked() {
+        return FileBackedTasksManager.loadFromFile("SaveData.csv");
+    }
+
+   public static HttpTaskManager getDefaultHttpTaskManager() {
+        return new HttpTaskManager("http://localhost:8078");
+    }
 }
