@@ -17,7 +17,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     protected void save() {
-        final String historyInString = historyToString((InMemoryHistoryManager) historyManager);
+        final String historyInString = historyToString(historyManager);
         try (FileWriter fileWriter = new FileWriter(path)) {
             fileWriter.write("id,type,name,status,description,duration,startTime,epicId");
             fileWriter.write("\n");
@@ -133,13 +133,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         save();
     }
 
-    @Override
-    public ArrayList<SubTask> getListOfEpicsSubTasks(int epicId) {
-        ArrayList<SubTask> epicSubTasks = super.getListOfEpicsSubTasks(epicId);
-        save();
-        return epicSubTasks;
-    }
-
     private Task stringToTask(String value) {
         String[] tasksInString = value.split(",");
         int id = Integer.parseInt(tasksInString[0]);
@@ -187,7 +180,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    protected static String historyToString(InMemoryHistoryManager manager) {
+    protected static String historyToString(HistoryManager<?> manager) {
         ArrayList<Integer> tasksId = new ArrayList<>(manager.getIdAndTaskNodes().keySet());
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < tasksId.size(); i++) {
@@ -204,9 +197,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         List<Integer> historyList = new ArrayList<>();
         String[] tasksId = value.split(",");
         for (String s : tasksId) {
-            if (!s.isBlank()) {
-                historyList.add(Integer.parseInt(s));
-            }
+            historyList.add(Integer.parseInt(s));
         }
         return historyList;
     }
@@ -244,14 +235,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     fileBackedTasksManager.historyManager.add(task);
                 }
             }
-            for (Task task : taskList) {
-                if (task.getId() > MAX_TASK_ID) {
-                    MAX_TASK_ID = task.getId();
+            if (!taskList.isEmpty()) {
+                for (Task task : taskList) {
+                    if (task.getId() > MAX_TASK_ID) {
+                        MAX_TASK_ID = task.getId();
+                        fileBackedTasksManager.setId(MAX_TASK_ID);
+                    }
                 }
-            }
-            if (file.length() != 58) {
-                fileBackedTasksManager.setId(MAX_TASK_ID + 1);
-            } else fileBackedTasksManager.setId(0);
+            } else
+                fileBackedTasksManager.setId(0);
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка чтения из файла с сохранёнными данными");
         }

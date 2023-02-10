@@ -9,9 +9,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.HttpTaskManager;
+
 import service.Managers;
 import service.Status;
+import service.TaskManager;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -26,7 +27,7 @@ import java.util.List;
 
 public class HttpTaskServerTest {
     Gson gson;
-    HttpTaskManager httpTaskManager;
+    TaskManager httpTaskManager;
     KVServer kvServer;
     HttpTaskServer httpTaskServer;
     HttpClient client;
@@ -36,7 +37,7 @@ public class HttpTaskServerTest {
         gson = new Gson();
         kvServer = new KVServer();
         kvServer.start();
-        httpTaskServer = new HttpTaskServer(httpTaskManager = Managers.getDefaultHttpTaskManager());
+        httpTaskServer = new HttpTaskServer(httpTaskManager = Managers.getDefault());
         httpTaskServer.startServer();
         client = HttpClient.newBuilder().connectTimeout(Duration.ofMillis(3000)).build();
 

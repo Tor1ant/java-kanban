@@ -1,10 +1,10 @@
 package server;
 
 import com.sun.net.httpserver.HttpExchange;
-import service.HttpTaskManager;
+import service.TaskManager;
 
 public class HistoryHandler extends PrioritizedTasksHandler {
-    public HistoryHandler(HttpTaskManager httpTaskManager) {
+    public HistoryHandler(TaskManager httpTaskManager) {
         super(httpTaskManager);
     }
 

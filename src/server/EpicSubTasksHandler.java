@@ -3,14 +3,14 @@ package server;
 import com.sun.net.httpserver.HttpExchange;
 
 import model.SubTask;
-import service.HttpTaskManager;
+import service.TaskManager;
 
 import java.util.ArrayList;
 
 import java.util.Optional;
 
 public class EpicSubTasksHandler extends TaskHandler {
-    public EpicSubTasksHandler(HttpTaskManager httpTaskManager) {
+    public EpicSubTasksHandler(TaskManager httpTaskManager) {
         super(httpTaskManager);
     }
 

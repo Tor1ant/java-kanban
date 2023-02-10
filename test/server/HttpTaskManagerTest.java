@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class HttpTaskManagerTest extends FileBackedTasksManagerTest {
-    HttpTaskManager httpTaskManager;
+    TaskManager httpTaskManager;
     KVServer kvServer;
     HttpTaskServer httpTaskServer;
 
@@ -20,7 +20,7 @@ public class HttpTaskManagerTest extends FileBackedTasksManagerTest {
     public void startServerAndCreateTasks() throws IOException {
         kvServer = new KVServer();
         kvServer.start();
-        httpTaskServer = new HttpTaskServer(httpTaskManager = Managers.getDefaultHttpTaskManager());
+        httpTaskServer = new HttpTaskServer(httpTaskManager = Managers.getDefault());
         httpTaskServer.startServer();
 
         Task task1 = new Task("Погулять с собакой", "в 5 утра", Status.NEW, 60,

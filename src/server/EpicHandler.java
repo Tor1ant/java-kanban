@@ -2,12 +2,12 @@ package server;
 
 import com.sun.net.httpserver.HttpExchange;
 import model.Epic;
-import service.HttpTaskManager;
+import service.TaskManager;
 
 import java.util.Optional;
 
 public class EpicHandler extends TaskHandler {
-    public EpicHandler(HttpTaskManager httpTaskManagerer) {
+    public EpicHandler(TaskManager httpTaskManagerer) {
         super(httpTaskManagerer);
     }
 

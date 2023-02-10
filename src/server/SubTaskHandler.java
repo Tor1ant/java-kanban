@@ -2,12 +2,12 @@ package server;
 
 import com.sun.net.httpserver.HttpExchange;
 import model.SubTask;
-import service.HttpTaskManager;
+import service.TaskManager;
 
 import java.util.Optional;
 
 public class SubTaskHandler extends TaskHandler {
-    public SubTaskHandler(HttpTaskManager httpTaskManager) {
+    public SubTaskHandler(TaskManager httpTaskManager) {
         super(httpTaskManager);
     }
 

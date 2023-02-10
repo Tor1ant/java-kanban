@@ -2,11 +2,13 @@ package server;
 
 import com.google.gson.Gson;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import model.Task;
-import service.HttpTaskManager;
+
+import service.TaskManager;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -17,11 +19,11 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 class TaskHandler implements HttpHandler {
-    protected HttpTaskManager httpTaskManager;
+    protected TaskManager httpTaskManager;
     protected Gson gson;
     protected Optional<String> query;
 
-    public TaskHandler(HttpTaskManager httpTaskManager) {
+    public TaskHandler(TaskManager httpTaskManager) {
         this.httpTaskManager = httpTaskManager;
         gson = new Gson();
     }
@@ -58,29 +60,17 @@ class TaskHandler implements HttpHandler {
                 httpTaskManager::createTask, Task.class);
     }
 
-    protected void writeResponse(HttpExchange exchange, String response, int code) {
-        try {
-            if (response.isBlank()) {
-                exchange.sendResponseHeaders(code, 0);
-            } else {
-                byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
-                exchange.sendResponseHeaders(code, 0);
-                OutputStream outputStream = exchange.getResponseBody();
-                outputStream.write(bytes);
-            }
-            exchange.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     protected <T extends Task> void handleGet(HttpExchange exchange, Supplier<ArrayList<T>> allTasksGetter,
                                               Function<Integer, T> taskByIdGetter) {
         if (query.isEmpty()) {
+            Headers headers = exchange.getResponseHeaders();
+            headers.set("Content-Type", "application/json");
             ArrayList<T> allTasks = allTasksGetter.get();
             String allTasksInJson = gson.toJson(allTasks);
             writeResponse(exchange, allTasksInJson, 200);
         } else {
+            Headers headers = exchange.getResponseHeaders();
+            headers.set("Content-Type", "application/json");
             String[] taskIdInString = query.get().split("=");
             int taskId = Integer.parseInt(taskIdInString[1]);
             try {
@@ -132,6 +122,22 @@ class TaskHandler implements HttpHandler {
             }
             TaskCreate.accept(taskForPost);
             writeResponse(exchange, "задача " + taskForPost.getTitle() + " добавлена", 200);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void writeResponse(HttpExchange exchange, String response, int code) {
+        try {
+            if (response.isBlank()) {
+                exchange.sendResponseHeaders(code, 0);
+            } else {
+                byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+                exchange.sendResponseHeaders(code, 0);
+                OutputStream outputStream = exchange.getResponseBody();
+                outputStream.write(bytes);
+            }
+            exchange.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

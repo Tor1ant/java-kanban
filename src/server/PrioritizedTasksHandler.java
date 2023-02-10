@@ -1,14 +1,12 @@
 package server;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import service.HttpTaskManager;
+import service.TaskManager;
 
 public class PrioritizedTasksHandler extends TaskHandler {
-    Gson gson = new Gson();
 
-    public PrioritizedTasksHandler(HttpTaskManager httpTaskManager) {
+    public PrioritizedTasksHandler(TaskManager httpTaskManager) {
         super(httpTaskManager);
     }
 
@@ -22,12 +20,8 @@ public class PrioritizedTasksHandler extends TaskHandler {
     }
 
     private void PrioritizedTasksHandle(HttpExchange exchange) {
-        if (exchange.getRequestURI().getQuery() == null) {
-            String prioritizedTasksInJson = gson.toJson(httpTaskManager.getPrioritizedTasks());
-            writeResponse(exchange, prioritizedTasksInJson, 200);
-        } else {
-            writeResponse(exchange, "у данного запроса не может быть параметров", 400);
-        }
+        String prioritizedTasksInJson = gson.toJson(httpTaskManager.getPrioritizedTasks());
+        writeResponse(exchange, prioritizedTasksInJson, 200);
     }
 
     @Override

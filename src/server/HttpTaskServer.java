@@ -1,7 +1,8 @@
 package server;
 
 import com.sun.net.httpserver.HttpServer;
-import service.HttpTaskManager;
+
+import service.TaskManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,9 +10,9 @@ import java.net.InetSocketAddress;
 public class HttpTaskServer {
     int PORT = 8080;
     private final HttpServer httpServer;
-    HttpTaskManager httpTaskManager;
+    TaskManager httpTaskManager;
 
-    public HttpTaskServer(HttpTaskManager httpTaskManager) throws IOException {
+    public HttpTaskServer(TaskManager httpTaskManager) throws IOException {
         this.httpTaskManager = httpTaskManager;
         httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks/task", new TaskHandler(httpTaskManager));
