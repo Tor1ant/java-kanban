@@ -66,13 +66,18 @@ class TaskManagerTest {
     }
 
     @Test
-    void ShouldTasksEqualsWhenHaveUpdatedTask() {
-        taskManager.createTask(task);
-        Task task1 = new Task("новый заголовок", "обновленная задачи", Status.DONE, task.getDuration(),
-                task.getStartTime().get());
-        task1.setId(1);
-        taskManager.updateTask(task1);
-        Assertions.assertEquals("новый заголовок", taskManager.getTaskByID(1).getTitle());
+    void shouldRemoveTaskWithoutStartTimeInPrioritizedTasks() {
+        Task task2 = new Task("Тестовая задача", "ПЛАТНО", Status.NEW, 60, LocalDateTime.now());
+        Task task3 = new Task("Тестовая задача Без времени", "ПЛАТНО", Status.NEW, 60,
+                null);
+        taskManager.createTask(task2);
+        taskManager.createTask(task3);
+        Task task4 = new Task("Тестовая задача Без времени АПДЕЙТНУТАЯ", "ПЛАТНО", Status.NEW, 60,
+                null);
+        task4.setId(task3.getId());
+        taskManager.updateTask(task4);
+        Assertions.assertEquals(2, taskManager.getPrioritizedTasks().size());
+
     }
 
     @Test
@@ -306,6 +311,16 @@ class TaskManagerTest {
         taskManager.getSubTaskById(3);
         List<Task> taskList = taskManager.getHistory();
         Assertions.assertEquals(3, taskList.size(), "История пустая");
+    }
+
+    @Test
+    void ShouldTasksEqualsWhenHaveUpdatedTask() {
+        taskManager.createTask(task);
+        Task task1 = new Task("новый заголовок", "обновленная задачи", Status.DONE, task.getDuration(),
+                task.getStartTime().get());
+        task1.setId(1);
+        taskManager.updateTask(task1);
+        Assertions.assertEquals("новый заголовок", taskManager.getTaskByID(1).getTitle());
     }
 
     @Test

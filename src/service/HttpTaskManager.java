@@ -24,7 +24,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
 
     @Override
     protected void save() {
-        final String historyInString = historyToString((InMemoryHistoryManager) historyManager);
+        final String historyInString = historyToString(historyManager);
         kvTaskClient.put("tasks", gson.toJson(tasks.values()));
         kvTaskClient.put("epics", gson.toJson(epics.values()));
         kvTaskClient.put("subtasks", gson.toJson(subTasks.values()));

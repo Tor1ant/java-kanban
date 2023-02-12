@@ -180,7 +180,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    protected static String historyToString(HistoryManager<?> manager) {
+    protected static String historyToString(InMemoryHistoryManager manager) {
         ArrayList<Integer> tasksId = new ArrayList<>(manager.getIdAndTaskNodes().keySet());
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < tasksId.size(); i++) {
@@ -234,16 +234,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 if (tasksId.contains(task.getId())) {
                     fileBackedTasksManager.historyManager.add(task);
                 }
+                if (task.getId() > MAX_TASK_ID) {
+                    MAX_TASK_ID = task.getId();
+                    fileBackedTasksManager.setId(MAX_TASK_ID);
+                } else fileBackedTasksManager.setId(0);
             }
-            if (!taskList.isEmpty()) {
-                for (Task task : taskList) {
-                    if (task.getId() > MAX_TASK_ID) {
-                        MAX_TASK_ID = task.getId();
-                        fileBackedTasksManager.setId(MAX_TASK_ID);
-                    }
-                }
-            } else
-                fileBackedTasksManager.setId(0);
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка чтения из файла с сохранёнными данными");
         }

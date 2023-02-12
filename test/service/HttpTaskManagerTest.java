@@ -1,11 +1,12 @@
-package server;
+package service;
 
 import model.Epic;
 import model.SubTask;
 import model.Task;
 
 import org.junit.jupiter.api.*;
-import service.*;
+import server.HttpTaskServer;
+import server.KVServer;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

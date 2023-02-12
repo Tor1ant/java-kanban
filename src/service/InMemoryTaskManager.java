@@ -11,10 +11,12 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Task> tasks = new HashMap<>();
     protected final HashMap<Integer, Epic> epics = new HashMap<>();
     protected final HashMap<Integer, SubTask> subTasks = new HashMap<>();
-    protected final HistoryManager historyManager = new InMemoryHistoryManager();
+    protected final InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
     protected final TreeSet<Task> prioritizedTasks = new TreeSet<>((o1, o2) -> {
-        if (o1.getStartTime().isEmpty()) {
+        if (o1.equals(o2)) {
+            return 0;
+        } else if (o1.getStartTime().isEmpty()) {
             return 1;
         } else if (o2.getStartTime().isEmpty()) {
             return -1;
@@ -252,11 +254,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     private void isTaskCrossWithAnyTask(Task task) {
 
-        if (getPrioritizedTasks().isEmpty() || task.getStartTime().isEmpty() && task.getEndTime().isEmpty()) {
+        if (getPrioritizedTasks().isEmpty()) {
             return;
         }
         for (Task prioritizedTask : getPrioritizedTasks()) {
             if (task.getId() == prioritizedTask.getId()) {
+                continue;
+            }
+            if (task.getStartTime().isEmpty() && task.getEndTime().isEmpty()) {
                 continue;
             }
             if (prioritizedTask.getStartTime().isEmpty() && prioritizedTask.getEndTime().isEmpty()) {

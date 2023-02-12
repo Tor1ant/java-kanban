@@ -21,12 +21,12 @@ public class EpicSubTasksHandler extends TaskHandler {
         if (requestMethod.equals("GET")) {
             handleGetEpicSubTasks(exchange);
         }
-        writeResponse(exchange, "Данный метод не поддерживается.", 405);
+        writeResponse(exchange, "Р”Р°РЅРЅС‹Р№ РјРµС‚РѕРґ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ.", 405);
     }
 
     private void handleGetEpicSubTasks(HttpExchange exchange) {
         if (query.isEmpty()) {
-            writeResponse(exchange, "Указаны не верные параметры.", 400);
+            writeResponse(exchange, "РЈРєР°Р·Р°РЅС‹ РЅРµ РІРµСЂРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹.", 400);
         } else {
             String[] epicIdInString = query.get().split("=");
             int taskId = Integer.parseInt(epicIdInString[1]);
